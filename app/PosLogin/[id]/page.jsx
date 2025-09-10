@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
-import Header from "./components/Header";
-import Sobre from "./components/Sobre";
-import Campeonato from "./components/Campeonato";
-import Footer from "./components/Footer";
+import HeaderPosLogin from "../../components/HeaderPosLogin";
+import Sobre from "../../components/Sobre";
+import Campeonato from "../../components/Campeonato";
+import Footer from "../../components/Footer";
+
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
           backgroundSize: "cover",
         }}
       >
-        <Header />
+        <HeaderPosLogin />
         <a
           href="#campeonato"
           onClick={e => {e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'});}}

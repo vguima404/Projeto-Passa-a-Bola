@@ -22,7 +22,7 @@ const Login = () => {
     }
     setSucesso(true);
     setTimeout(() => {
-      router.push("/");
+      router.push("/PosLogin/1");
     }, 2000);
   };
 
