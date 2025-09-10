@@ -1,12 +1,18 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins&family=Prata&display=swap');
 
 :root {
   --start-color: #7b2ff7;
   --end-color: #f107a3;
   --h2: 1rem;
   --hero-bg: url('/passa-a-bola/public/images/Lucid_Origin_a_woman_with_a_determined_facial_expression_and_a_2.jpg');
+  --font-prata: 'Prata', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --shadow-6: 10px 10px 30px rgba(0, 0, 0, 0.06);
 }
 
+
 body{
+  font-family: var(--font-poppins);
   scroll-behavior: smooth;
 }
