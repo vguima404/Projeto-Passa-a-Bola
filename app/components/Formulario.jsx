@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CampoTexto from "./CampoTexto";
 import SideImage from "./SideImage";
 import Button from "./Button";
@@ -11,16 +12,27 @@ import Checkbox from "./Checkbox";
 const Formulario = () => {
 
   const [erroSenha, setErroSenha] = useState("");
+  const [erroTermos, setErroTermos] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const [aceitouTermos, setAceitouTermos] = useState(false);
+  const router = useRouter();
 
   const aoSalvar = (evento) => {
     evento.preventDefault();
     setErroSenha("");
+    setErroTermos("");
+    if (!aceitouTermos) {
+      setErroTermos("Você precisa aceitar os Termos para continuar.");
+      return;
+    }
     if (senha !== confirmaSenha) {
       setErroSenha("As senhas não coincidem.");
       return;
     }
-    console.log(nome, email, senha, confirmaSenha);
-    console.log('Formulário submetido');
+    setSucesso(true);
+    setTimeout(() => {
+      router.push(`/Login/1`);
+    }, 500);
   }
 
   const [nome, setNome] = useState('');
@@ -67,8 +79,14 @@ const Formulario = () => {
           {erroSenha && (
             <span className="text-red-600 text-xs font-medium">{erroSenha}</span>
           )}
-          <Button type="submit">CADASTRAR-SE</Button>
-          <Checkbox label="Li e concordo com os Termos!" />
+          {sucesso && (
+            <span className="text-green-600 text-xs font-medium">Usuário cadastrado com sucesso!</span>
+          )}
+          {erroTermos && (
+            <span className="text-red-600 text-xs font-medium">{erroTermos}</span>
+          )}
+          <Button type="submit" disabled={sucesso}>CADASTRAR-SE</Button>
+          <Checkbox label="Li e concordo com os Termos!" checked={aceitouTermos} onChange={e => setAceitouTermos(e.target.checked)} />
         </div>
       </form>
     </div>
