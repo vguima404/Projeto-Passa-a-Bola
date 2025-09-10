@@ -1,13 +1,17 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CampoTexto from "../../components/CampoTexto";
 import SideImage from "../../components/SideImage";
 import Button from "../../components/Button";
+import Link from 'next/link';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const router = useRouter();
 
   const aoLogar = (evento) => {
     evento.preventDefault();
@@ -16,13 +20,15 @@ const Login = () => {
       setErro("Preencha todos os campos.");
       return;
     }
-
-    alert("Login realizado com sucesso!");
+    setSucesso(true);
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
   };
 
   return (
     <div className="flex items-center h-screen">
-      <SideImage imageUrl="/ale&luana.jpg" alt="Login" />
+      <SideImage imageUrl="/taca.jpg" alt="Login" />
       <form className="bg-white w-1/2 h-screen p-2.5 shadow-[var(--shadow-8)] flex flex-col justify-center items-center" onSubmit={aoLogar}>
         <div className="w-full max-w-[370px] mx-auto flex flex-col gap-5">
           <h2 className="text-2xl font-bold text-gray-800 mb-2 leading-tight uppercase" style={{fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.5px'}}>BEM-VINDO DE VOLTA</h2>
@@ -44,7 +50,11 @@ const Login = () => {
           {erro && (
             <span className="text-red-600 text-xs font-medium">{erro}</span>
           )}
-          <Button type="submit">ENTRAR</Button>
+          {sucesso && (
+            <span className="text-green-600 text-xs font-medium">Login realizado com sucesso!</span>
+          )}
+          <Button type="submit" disabled={sucesso}>ENTRAR</Button>
+          <Link href="/Cadastro/1" className="text-purple-700 text-xs font-semibold mt-2 hover:text-purple-800 hover:underline transition-all text-center block">Cadastre-se agora!</Link>
         </div>
       </form>
     </div>
