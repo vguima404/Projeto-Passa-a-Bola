@@ -38,14 +38,8 @@ const HeaderPosLogin = () => {
               </Link>
             </li>
             <li>
-              <Link className="text-white font-semibold hover:underline" href="#">
+              <Link className="text-white font-semibold hover:underline" href="/Loja/1">
                 Loja
-              </Link>
-            </li>
-            <li>
-              <Link className="text-white font-semibold hover:underline flex items-center gap-2" href="/Carrinho">
-                <FaShoppingCart className="inline-block text-lg" />
-                Carrinho
               </Link>
             </li>
             <li>
