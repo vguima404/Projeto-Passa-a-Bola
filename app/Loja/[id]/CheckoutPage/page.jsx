@@ -1,18 +1,54 @@
 "use client";
+
 import React, { useState } from "react";
 import { FaCreditCard, FaBarcode, FaQrcode, FaCheck } from "react-icons/fa";
-import BackHomeButton from "../../../components/VoltarHome";
+import { TextInput, CepInput } from "../../../components/InputComponents";
+
 
 export default function CheckoutPage() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [pagamento, setPagamento] = useState("pix");
 
+  // Campos de endereço
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [numero, setNumero] = useState("");
+
+  const buscarEndereco = async () => {
+    const cepLimpo = cep.replace(/\D/g, ""); // remove caracteres não numéricos
+    if (cepLimpo.length !== 8) {
+      alert("CEP inválido!");
+      return;
+    }
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        alert("CEP não encontrado!");
+        return;
+      }
+      setEndereco(data.logradouro);
+      setBairro(data.bairro);
+      setCidade(data.localidade);
+      setEstado(data.uf);
+    } catch (error) {
+      alert("Erro ao buscar endereço.");
+      console.error(error);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aqui você pode enviar os dados para sua API ou backend
-    alert(`Compra confirmada!\nNome: ${nome}\nCPF: ${cpf}\nPagamento: ${pagamento}`);
-  };
+    alert(`Compra confirmada!
+    Nome: ${nome}
+    CPF: ${cpf}
+    Pagamento: ${pagamento}
+      Endereço: ${endereco}, ${numero}, ${bairro}, ${cidade} - ${estado}`);
+    };
 
   return (
     <div className="bg-gray-100 min-h-screen py-12 px-6">
@@ -20,38 +56,66 @@ export default function CheckoutPage() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Finalizar Compra 🛒
         </h1>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Nome */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Nome do Pagador
-            </label>
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              required
-              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Digite seu nome completo"
-            />
-          </div>
+          <TextInput
+            label="Nome do Pagador"
+            value={nome}
+            onChange={e => setNome(e.target.value)}
+            required
+            placeholder="Digite seu nome completo"
+          />
 
           {/* CPF */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              CPF
-            </label>
-            <input
-              type="text"
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
-              required
-              maxLength={14}
-              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="000.000.000-00"
-            />
-          </div>
+          <TextInput
+            label="CPF"
+            value={cpf}
+            onChange={e => setCpf(e.target.value)}
+            required
+            maxLength={14}
+            placeholder="000.000.000-00"
+          />
+
+          {/* CEP */}
+          <CepInput
+            value={cep}
+            onChange={e => setCep(e.target.value)}
+            onBuscar={buscarEndereco}
+            required
+          />
+
+          {/* Endereço */}
+          {endereco && (
+            <>
+              <TextInput
+                label="Endereço"
+                value={endereco}
+                readOnly
+              />
+              <TextInput
+                label="Número"
+                value={numero}
+                onChange={e => setNumero(e.target.value)}
+                required
+                placeholder="Número da casa"
+              />
+              <TextInput
+                label="Bairro"
+                value={bairro}
+                readOnly
+              />
+              <TextInput
+                label="Cidade"
+                value={cidade}
+                readOnly
+              />
+              <TextInput
+                label="Estado"
+                value={estado}
+                readOnly
+              />
+            </>
+          )}
 
           {/* Método de Pagamento */}
           <div>
@@ -70,7 +134,9 @@ export default function CheckoutPage() {
               >
                 <FaQrcode size={24} />
                 <span className="mt-2 font-medium">Pix</span>
-                {pagamento === "pix" && <FaCheck className="text-purple-600 mt-1" />}
+                {pagamento === "pix" && (
+                  <FaCheck className="text-purple-600 mt-1" />
+                )}
               </button>
 
               <button
@@ -84,7 +150,9 @@ export default function CheckoutPage() {
               >
                 <FaCreditCard size={24} />
                 <span className="mt-2 font-medium">Cartão</span>
-                {pagamento === "cartao" && <FaCheck className="text-purple-600 mt-1" />}
+                {pagamento === "cartao" && (
+                  <FaCheck className="text-purple-600 mt-1" />
+                )}
               </button>
 
               <button
@@ -98,7 +166,9 @@ export default function CheckoutPage() {
               >
                 <FaBarcode size={24} />
                 <span className="mt-2 font-medium">Boleto</span>
-                {pagamento === "boleto" && <FaCheck className="text-purple-600 mt-1" />}
+                {pagamento === "boleto" && (
+                  <FaCheck className="text-purple-600 mt-1" />
+                )}
               </button>
             </div>
           </div>
