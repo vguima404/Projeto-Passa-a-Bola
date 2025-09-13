@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaShoppingCart, FaTimes } from "react-icons/fa";
 import BackHomeButton from "../../components/VoltarHome";
+import Footer from "../../components/Footer";
 
 export default function LojaComCarrinho() {
   const params = useParams();
@@ -92,13 +93,22 @@ export default function LojaComCarrinho() {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen py-12 px-6 relative">
+    <>
+    <div
+      className="min-h-screen py-12 px-6 relative"
+      style={{
+        backgroundImage:
+          "linear-gradient(90deg, rgba(19, 17, 59, 0.63) 0%, rgba(7, 7, 43, 0.7) 35%, rgba(1, 9, 20, 0.7) 100%), url('/estadio.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="max-w-6xl mx-auto">
         
 
         {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">🛍️ Loja Passa a Bola</h1>
+          <h1 className="text-3xl font-bold text-gray-100">🛍️ Loja Passa a Bola</h1>
           <div className="flex items-center gap-4">
             <BackHomeButton/>
             <button
@@ -117,19 +127,19 @@ export default function LojaComCarrinho() {
           </div>
         </div>
         
-        <p className="text-lg text-gray-700 mb-10 text-center">
+        <p className="text-xl text-white/90 mb-10 text-center">
           Ao comprar nossos produtos, você não só leva qualidade e estilo,
-          como também apoia o projeto <span className="font-bold text-purple-600">Passa a Bola</span>,
+          como também apoia o projeto <span className="font-bold text-purple-400">Passa a Bola</span>,
           ajudando a transformar vidas através do esporte.  
           Juntos, podemos fazer a diferença dentro e fora das quadras. ⚽💜
         </p>
 
         {/* Grid de produtos */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-20 sm:grid-cols-2 lg:grid-cols-3">
           {produtos.map((produto) => (
             <div
               key={produto.id}
-              className="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition overflow-hidden flex flex-col"
+              className="bg-gray-200 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition overflow-hidden flex flex-col"
             >
               <img
                 src={produto.imagem}
@@ -241,5 +251,7 @@ export default function LojaComCarrinho() {
         </div>
       </aside>
     </div>
+    <Footer />
+    </>
   );
 }

@@ -1,7 +1,7 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins&family=Prata&display=swap');
 
-:root {
+
+@theme {
   --start-color: #7b2ff7;
   --end-color: #f107a3;
   --h2: 1rem;
@@ -9,8 +9,10 @@
   --font-prata: 'Prata', sans-serif;
   --font-poppins: 'Poppins', sans-serif;
   --shadow-6: 10px 10px 30px rgba(0, 0, 0, 0.06);
+  --linear-blue: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 20, 26, 1) 100%);
 }
 
+@import "tailwindcss";
 
 body{
   font-family: var(--font-poppins);

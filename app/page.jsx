@@ -12,8 +12,7 @@ export default function Home() {
       <section
         className="w-screen h-screen bg-cover bg-center relative"
         style={{
-          backgroundImage: "url('/ale&luana.jpg')",
-          backgroundAttachment: "fixed",
+          backgroundImage: "linear-gradient(90deg, rgba(7, 6, 29, 0.63) 0%, rgba(7, 7, 43, 0.7) 35%, rgba(1, 9, 20, 0.7) 100%), url('/ale&luana.jpg')",
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
@@ -22,7 +21,7 @@ export default function Home() {
         <a
           href="#campeonato"
           onClick={e => {e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'});}}
-          className="text-white py-5 px-20 rounded-xl text-lg font-bold bg-purple-400 absolute left-1/2 -translate-x-1/2 bottom-24 shadow-lg hover:bg-purple-500 transition-all duration-500"
+            className="text-white py-3 px-6 sm:py-4 sm:px-5 md:py-5 md:px-10 rounded-xl text-base sm:text-lg md:text-xl font-bold bg-purple-500 absolute left-1/2 -translate-x-1/2 bottom-24 shadow-lg hover:bg-purple-600 transition-all duration-500 whitespace-nowrap"
         >
           Acompanhe o campeonato!
         </a>
