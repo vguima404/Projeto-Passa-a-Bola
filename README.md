@@ -29,8 +29,25 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## API Endpoints (Documentação)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Exemplo de endpoints utilizados no frontend:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Buscar jogos do campeonato**
+
+  - `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases/{fase_id}`
+  - Parâmetros: `campeonato_id` (ID do campeonato), `fase_id` (ID da fase)
+  - Retorna: Dados das partidas da fase
+
+- **Buscar fases do campeonato**
+
+  - `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases`
+  - Parâmetros: `campeonato_id` (ID do campeonato)
+  - Retorna: Lista de fases disponíveis
+
+- **Buscar endereço por CEP**
+  - `GET https://viacep.com.br/ws/{cep}/json/`
+  - Parâmetros: `cep` (CEP brasileiro)
+  - Retorna: Dados de endereço (logradouro, bairro, cidade, estado)
+
+Adapte conforme novos endpoints forem utilizados no projeto.
