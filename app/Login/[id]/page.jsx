@@ -13,18 +13,39 @@ const Login = () => {
   const [sucesso, setSucesso] = useState(false);
   const router = useRouter();
 
-  const aoLogar = (evento) => {
-    evento.preventDefault();
-    setErro("");
-    if (!email || !senha) {
-      setErro("Preencha todos os campos.");
-      return;
+  const aoLogar = async (evento) => {
+  evento.preventDefault();
+  setErro("");
+  setSucesso(false);
+
+  if (!email || !senha) {
+    setErro("Preencha todos os campos.");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password: senha }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setSucesso(true);
+      setTimeout(() => {
+        router.push("/PosLogin/1");
+      }, 2000);
+    } else {
+      setErro(data.message);
     }
-    setSucesso(true);
-    setTimeout(() => {
-      router.push("/PosLogin/1");
-    }, 2000);
-  };
+  } catch (err) {
+    setErro("Erro ao conectar com o servidor.");
+  }
+};
+
+
 
   return (
     <div className="flex items-center h-screen">

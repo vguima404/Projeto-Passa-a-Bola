@@ -55,7 +55,7 @@ export default function EstatisticasPage() {
     const mockDefesas = [
       { name: "Letícia", image: "/IA4.jpg", stat: 45, type: "Defesas" },
       { name: "Bárbara", image: "/IA5.jpg", stat: 40, type: "Defesas" },
-      { name: "Camila", image: "/IA6.jpg ", stat: 37, type: "Defesas" },
+      { name: "Karine", image: "/IA6.jpg ", stat: 37, type: "Defesas" },
     ];
 
     setTopGoleadoras(mockGols);
