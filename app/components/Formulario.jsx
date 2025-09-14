@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CampoTexto from "./CampoTexto";
@@ -17,7 +17,7 @@ const Formulario = () => {
   const [aceitouTermos, setAceitouTermos] = useState(false);
   const router = useRouter();
 
-  const aoSalvar = (evento) => {
+  const aoSalvar = async (evento) => {
     evento.preventDefault();
     setErroSenha("");
     setErroTermos("");
@@ -29,10 +29,29 @@ const Formulario = () => {
       setErroSenha("As senhas não coincidem.");
       return;
     }
-    setSucesso(true);
-    setTimeout(() => {
-      router.push(`/Login/1`);
-    }, 500);
+    try {
+    const response = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        name: nome,
+        password: senha
+      })
+    });
+
+    if (response.ok) {
+      setSucesso(true);
+      setTimeout(() => {
+        router.push(`/Login/1`);
+      }, 500);
+    } else {
+      const data = await response.json();
+      setErroSenha(data.error || "Erro ao cadastrar.");
+    }
+  } catch (error) {
+    setErroSenha("Erro de conexão com o servidor.");
+  }
   }
 
   const [nome, setNome] = useState('');
