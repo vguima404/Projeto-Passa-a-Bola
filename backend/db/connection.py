@@ -9,8 +9,7 @@ db = client["passa_a_bola"]
 col = db["users"]
  
 
-col.insert_one({"nome": "teste da silva", "posição": "goleira"})
+
 
  
 
-client.close()

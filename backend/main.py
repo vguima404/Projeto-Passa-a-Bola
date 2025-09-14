@@ -1,4 +1,4 @@
-# main.py
+
 from flask import Flask
 from flask_cors import CORS  
 from src.routes.register import register_bp

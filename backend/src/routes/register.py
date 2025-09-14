@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from src.models.user import User
+from db.connection import col
 import json
 import os
 
@@ -12,21 +13,14 @@ def register():
     name = data.get('name')
     password = data.get('password')
 
-    # Cria o usuário
-    user = User(email=email, name=name, password=password)
 
-    # Salva no arquivo JSON (simulando banco)
-    users_file = os.path.join(os.path.dirname(__file__), '..', 'db', 'users.json')
-    users_file = os.path.abspath(users_file)
-    if os.path.exists(users_file):
-        with open(users_file, 'r', encoding='utf-8') as f:
-            users = json.load(f)
-    else:
-        users = []
+    user = {
+    "email": email,
+    "nome": name,
+    "senha": password  # idealmente, hasheada
+}
 
-    users.append(user.to_dict())
+    result = col.insert_one(user)
 
-    with open(users_file, 'w', encoding='utf-8') as f:
-        json.dump(users, f, ensure_ascii=False, indent=2)
-
-    return jsonify(user.to_dict()), 201
+    # Retorna o id do documento criado
+    return {"id": str(result.inserted_id), "email": email, "name": name}, 201
