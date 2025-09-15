@@ -53,14 +53,14 @@ export default function EstatisticasPage() {
       // Ajusta formato para PlayerCard
       const gols = data.gols.map(p => ({
         name: p.name,
-        image: p.image || "/placeholder-player.png",
+        image: p.image || "/usuarioplaceholder.jpg",
         stat: p.gols,
         type: "Gols",
       }));
 
       const defesas = data.defesas.map(p => ({
         name: p.name,
-        image: p.image || "/placeholder-player.png",
+        image: p.image || "/usuarioplaceholder.jpg",
         stat: p.defesas,
         type: "Defesas",
       }));
@@ -79,7 +79,6 @@ export default function EstatisticasPage() {
     <>
     <HeaderComunidade />
     <div className="min-h-screen w-full flex flex-col items-center justify-start bg-gradient-to-br from-purple-900 via-purple-400 to-yellow-200 relative overflow-x-hidden animate-gradient-move">
-      {/* Shapes esportivos e gradiente animado */}
       <div className="absolute inset-0 z-0 bg-[url('/estadio.jpg')] bg-cover bg-center opacity-20"></div>
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-purple-900/80 via-transparent to-yellow-100/60"></div>
       <div className="absolute top-0 left-0 w-1/2 h-40 bg-gradient-to-r from-purple-400/60 to-transparent rounded-br-full blur-2xl opacity-60 z-10"></div>
