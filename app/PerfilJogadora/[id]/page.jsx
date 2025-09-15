@@ -28,7 +28,7 @@ const initialProfile = {
   name: "Meu Perfil",
   email: "usuario@exemplo.com",
   photoUrl: null,
-  cpf: null,
+  cpf: "",
   socials: {
     instagram: "",
     facebook: "",
@@ -36,10 +36,7 @@ const initialProfile = {
   },
   position: "",
   achievements: ["Artilheira"],
-  matches: [
-    { date: "2025-09-10", opponent: "Time X", goalsFor: 3, goalsAgainst: 1, competition: "Copa Passa a Bola" },
-    { date: "2025-08-28", opponent: "Time Y", goalsFor: 0, goalsAgainst: 2, competition: "Copa Passa a Bola" },
-  ],
+  matches: [],
   team: null,
 };
 
@@ -49,11 +46,6 @@ const initialProfile = {
 export default function PlayerProfilePage() {
   const [profile, setProfile] = useState(initialProfile);
   const [editing, setEditing] = useState(false);
-
-  function handleSave(updated) {
-    setProfile((prev) => ({ ...prev, ...updated }));
-    setEditing(false);
-  }
 
   /* =========================
      Busca dados do usuário logado
@@ -66,18 +58,40 @@ export default function PlayerProfilePage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setProfile((prev) => ({
-            ...prev,
-            email: data.email,
-            name: data.name,
-            id: userId, // adiciona id para usar no BackHomeButton, etc
-          }));
+          setProfile({
+            ...data,
+            id: userId,
+          });
         } else {
           console.error("Erro ao buscar usuário:", data.message);
         }
       })
       .catch((err) => console.error("Erro ao buscar usuário:", err));
   }, []);
+
+  /* =========================
+     Salvar alterações (incluindo CPF)
+     ========================= */
+  async function handleSave(updated) {
+    setProfile((prev) => ({ ...prev, ...updated }));
+    setEditing(false);
+
+    if (!profile.id) return;
+
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/user/${profile.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated), // envia CPF, foto, posição etc
+      });
+      const data = await response.json();
+      if (!data.success) {
+        console.error("Erro ao salvar perfil:", data.message);
+      }
+    } catch (err) {
+      console.error("Erro ao salvar perfil:", err);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -86,8 +100,13 @@ export default function PlayerProfilePage() {
           <h1 className="text-3xl font-bold text-purple-600">Perfil da Jogadora</h1>
           <BackHomeButton id={profile.id} />
         </div>
+
         {editing ? (
-          <PlayerRegistrationForm initial={profile} onSave={handleSave} onCancel={() => setEditing(false)} />
+          <PlayerRegistrationForm
+            initial={profile}
+            onSave={handleSave}
+            onCancel={() => setEditing(false)}
+          />
         ) : (
           <div className="bg-white shadow-xl rounded-2xl p-6">
             <div className="flex flex-col md:flex-row gap-6">

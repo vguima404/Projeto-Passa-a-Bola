@@ -15,17 +15,17 @@ export default function ProfileHeader({ profile, onEdit }) {
       {profile.cpf && <p className="text-sm text-gray-500 mt-1">CPF: {profile.cpf}</p>}
 
       <div className="flex gap-3 mt-4">
-        {profile.socials.instagram && (
+        {profile.socials?.instagram && (
           <a href={profile.socials.instagram} target="_blank" rel="noreferrer" className="hover:text-purple-600 transition-colors duration-300">
             <FaInstagram size={20} />
           </a>
         )}
-        {profile.socials.facebook && (
+        {profile.socials?.facebook && (
           <a href={profile.socials.facebook} target="_blank" rel="noreferrer" className="hover:text-purple-600 transition-colors duration-300">
             <FaFacebook size={20} />
           </a>
         )}
-        {profile.socials.tiktok && (
+        {profile.socials?.tiktok && (
           <a href={profile.socials.tiktok} target="_blank" rel="noreferrer" className="hover:text-purple-600 transition-colors duration-300">
             <FaTiktok size={20} />
           </a>
