@@ -33,6 +33,7 @@ const Login = () => {
     const data = await response.json();
 
     if (data.success) {
+      localStorage.setItem("user_id", data.user_id);
       setSucesso(true);
       setTimeout(() => {
         router.push("/PosLogin/1");

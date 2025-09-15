@@ -13,6 +13,9 @@ def register():
     name = data.get('name')
     password = data.get('password')
 
+    existing_user = col.find_one({"email": email})
+    if existing_user:
+        return jsonify({"success": False, "message": "Email já registrado."}), 409 
 
     user = {
     "email": email,
