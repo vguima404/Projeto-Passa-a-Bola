@@ -55,7 +55,10 @@ def get_user(user_id):
             "name": user.get("nome"),
             "cpf": user.get("cpf"),
             "photoUrl": user.get("photoUrl"),
-            "position": user.get("position")
+            "position": user.get("position"),
+            "socials": user.get("socials"),
+            "achievements": user.get("achievements", []),
+            "matches": user.get("matches", [])
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
@@ -80,6 +83,12 @@ def update_user(user_id):
             update_data["nome"] = data["name"]
         if "email" in data:
             update_data["email"] = data["email"]
+        if "socials" in data:
+            update_data["socials"] = data["socials"]
+        if "achievements" in data:
+            update_data["achievements"] = data["achievements"]
+        if "matches" in data:
+            update_data["matches"] = data["matches"]
 
         if not update_data:
             return jsonify({"success": False, "message": "Nenhum dado para atualizar"}), 400
@@ -91,6 +100,19 @@ def update_user(user_id):
         else:
             return jsonify({"success": False, "message": "Nada foi alterado"}), 200
 
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+# =========================
+# GET TODOS USUÁRIOS (para OlheiroProfile)
+# =========================
+@app.route("/users", methods=["GET"])
+def get_all_players():
+    try:
+        players = list(col.find({"cpf": {"$exists": True}}))  # apenas jogadores cadastrados
+        for p in players:
+            p["_id"] = str(p["_id"])  # converte ObjectId para string
+        return jsonify(players), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
