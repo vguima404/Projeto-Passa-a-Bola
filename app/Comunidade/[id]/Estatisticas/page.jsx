@@ -45,22 +45,35 @@ export default function EstatisticasPage() {
 
   // ⚠️ Aqui futuramente você vai trocar pelo fetch do MongoDB
   useEffect(() => {
-    // Simulando dados vindos do banco
-    const mockGols = [
-      { name: "Marta", image: "/IA1.jpg", stat: 15, type: "Gols" },
-      { name: "Bia Zaneratto", image: "/IA2.jpg", stat: 12, type: "Gols" },
-      { name: "Kerolin", image: "/IA3.jpg", stat: 9, type: "Gols" },
-    ];
+  async function fetchStats() {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/top-stats");
+      const data = await res.json();
 
-    const mockDefesas = [
-      { name: "Letícia", image: "/IA4.jpg", stat: 45, type: "Defesas" },
-      { name: "Bárbara", image: "/IA5.jpg", stat: 40, type: "Defesas" },
-      { name: "Karine", image: "/IA6.jpg ", stat: 37, type: "Defesas" },
-    ];
+      // Ajusta formato para PlayerCard
+      const gols = data.gols.map(p => ({
+        name: p.name,
+        image: p.image || "/placeholder-player.png",
+        stat: p.gols,
+        type: "Gols",
+      }));
 
-    setTopGoleadoras(mockGols);
-    setTopDefesas(mockDefesas);
-  }, []);
+      const defesas = data.defesas.map(p => ({
+        name: p.name,
+        image: p.image || "/placeholder-player.png",
+        stat: p.defesas,
+        type: "Defesas",
+      }));
+
+      setTopGoleadoras(gols);
+      setTopDefesas(defesas);
+    } catch (err) {
+      console.error("Erro ao buscar estatísticas:", err);
+    }
+  }
+
+  fetchStats();
+}, []);
 
   return (
     <>

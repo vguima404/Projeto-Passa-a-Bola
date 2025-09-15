@@ -58,13 +58,15 @@ def get_user(user_id):
             "position": user.get("position"),
             "socials": user.get("socials"),
             "achievements": user.get("achievements", []),
-            "matches": user.get("matches", [])
+            "matches": user.get("matches", []),
+            "gols": user.get("gols", 0),
+            "defesas": user.get("defesas", 0)         
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
-# ATUALIZAR USUÁRIO (CPF, foto, posição, nome, email)
+# ATUALIZAR USUÁRIO
 # =========================
 @app.route("/user/<user_id>", methods=["PUT"])
 def update_user(user_id):
@@ -72,7 +74,6 @@ def update_user(user_id):
         data = request.json
         update_data = {}
 
-        # Atualiza campos permitidos
         if "cpf" in data:
             update_data["cpf"] = data["cpf"]
         if "photoUrl" in data:
@@ -89,6 +90,10 @@ def update_user(user_id):
             update_data["achievements"] = data["achievements"]
         if "matches" in data:
             update_data["matches"] = data["matches"]
+        if "gols" in data:
+            update_data["gols"] = data["gols"]
+        if "defesas" in data:
+            update_data["defesas"] = data["defesas"]
 
         if not update_data:
             return jsonify({"success": False, "message": "Nenhum dado para atualizar"}), 400
@@ -104,7 +109,7 @@ def update_user(user_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
-# GET TODOS USUÁRIOS (para OlheiroProfile)
+# GET TODOS USUÁRIOS
 # =========================
 @app.route("/users", methods=["GET"])
 def get_all_players():
@@ -113,6 +118,35 @@ def get_all_players():
         for p in players:
             p["_id"] = str(p["_id"])  # converte ObjectId para string
         return jsonify(players), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+# =========================
+# TOP ESTATÍSTICAS (artilheiras + goleiras)
+# =========================
+@app.route("/top-stats", methods=["GET"])
+def get_top_stats():
+    try:
+        # Top 3 gols
+        top_gols = list(col.find(
+            {}, {"nome": 1, "gols": 1, "photoUrl": 1, "_id": 0}
+        ).sort("gols", -1).limit(3))
+
+        # Top 3 defesas
+        top_defesas = list(col.find(
+            {}, {"nome": 1, "defesas": 1, "photoUrl": 1, "_id": 0}
+        ).sort("defesas", -1).limit(3))
+
+        # Completa com "slots vazios" se faltar jogadoras
+        while len(top_gols) < 3:
+            top_gols.append({"nome": "", "gols": 0, "photoUrl": ""})
+        while len(top_defesas) < 3:
+            top_defesas.append({"nome": "", "defesas": 0, "photoUrl": ""})
+
+        return jsonify({
+            "gols": top_gols,
+            "defesas": top_defesas
+        }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
