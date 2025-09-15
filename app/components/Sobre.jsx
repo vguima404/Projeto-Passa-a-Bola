@@ -28,7 +28,7 @@ export default function Sobre() {
           <img
             src="/jogadas1.jpg"
             alt="Luana em disputa de bola com outra jogadora"
-            className="rounded-2xl shadow-lg"
+            className="rounded-lg shadow-lg"
           />
           <div>
             <h3 className="text-2xl font-semibold mb-4 text-white drop-shadow">Nossa História</h3>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useState } from 'react';
 
 
@@ -14,7 +14,7 @@ const HeaderComunidade = () => {
         : "flex flex-row gap-4 md:gap-8 lg:gap-10 text-base md:text-lg items-center whitespace-nowrap"
     }>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/" onClick={()=>setMenuOpen(false)}>
+        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/PosLogin/1" onClick={()=>setMenuOpen(false)}>
           Início
         </Link>
       </li>
@@ -44,6 +44,19 @@ const HeaderComunidade = () => {
           Meu Perfil
         </Link>
       </li>
+      <ul>
+        <Link
+          className="text-white font-poppins text-xl font-semibold hover:underline flex items-center gap-2 justify-center"
+          href="/"
+          onClick={() => {
+            localStorage.removeItem("user_id");
+            setMenuOpen(false);
+          }}
+        >
+          Logout
+          <FaSignOutAlt className="inline-block text-lg" />
+        </Link>
+      </ul>
     </ul>
   );
 

@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaMedal, FaCamera } from "react-icons/fa";
+import BackHomeButton from "../../../app/components/VoltarHome";
 
 export default function Profile() {
     const [role, setRole] = useState("comum"); // comum | jogadora | olheiro
@@ -30,19 +31,19 @@ export default function Profile() {
         <section className="bg-gray-100 py-12 px-6 min-h-screen">
             <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8">
                 {/* Header */}
-                <div className="flex items-center border-b pb-6 relative">
+                <div className="flex items-center border-b pb-6 relative justify-between">
                     <div className="relative">
                         <img
                             src={avatar}
                             alt="Perfil"
                             className="w-20 h-20 rounded-full border-4 border-purple-600 object-cover"
-                        />
+                            />
                         <button
                             type="button"
                             onClick={() => fileInputRef.current.click()}
                             className="absolute bottom-1 right-1 bg-purple-600 text-white p-2 rounded-full shadow hover:bg-purple-700 transition"
                             title="Alterar foto"
-                        >
+                            >
                             <FaCamera />
                         </button>
                         <input
@@ -51,9 +52,9 @@ export default function Profile() {
                             ref={fileInputRef}
                             onChange={handleAvatarChange}
                             className="hidden"
-                        />
+                            />
                     </div>
-                    <div className="ml-6">
+                    <div className="ml-6 justify-between">
                         <h2 className="text-2xl font-bold text-gray-800">
                             {role === "comum" && "Meu Perfil"}
                             {role === "jogadora" && "Perfil da Jogadora"}
@@ -65,6 +66,7 @@ export default function Profile() {
                             {role === "olheiro" && "Olheiro cadastrado"}
                         </p>
                     </div>
+                    <BackHomeButton/>
                 </div>
 
                 {/* PERFIL COMUM */}
@@ -77,7 +79,7 @@ export default function Profile() {
                                 <span className="text-gray-500">10/09/2025</span>
                             </li>
                             <li className="p-4 bg-gray-50 rounded-lg shadow-sm flex justify-between">
-                                <span>Ingresso Copa Passa a Bola</span>
+                                <span>Boné oficial Copa Passa a Bola</span>
                                 <span className="text-gray-500">02/09/2025</span>
                             </li>
                         </ul>

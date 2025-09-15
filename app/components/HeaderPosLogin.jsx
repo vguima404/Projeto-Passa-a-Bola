@@ -1,7 +1,5 @@
-
-
 import Link from 'next/link';
-import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useState } from 'react';
 
 
@@ -51,10 +49,23 @@ const Header = () => {
       </li>
       <li>
         <Link className="text-white font-poppins text-xl font-semibold hover:underline flex items-center gap-2 justify-center" href="/MeuPerfil/1" onClick={()=>setMenuOpen(false)}>
-          Meu perfil
           <FaUser className="inline-block text-lg" />
+          Meu perfil
         </Link>
       </li>
+      <ul>
+        <Link
+          className="text-white font-poppins text-xl font-semibold hover:underline flex items-center gap-2 justify-center"
+          href="/"
+          onClick={() => {
+            localStorage.removeItem("user_id");
+            setMenuOpen(false);
+          }}
+        >
+          Logout
+          <FaSignOutAlt className="inline-block text-lg" />
+        </Link>
+      </ul>
     </ul>
   );
 

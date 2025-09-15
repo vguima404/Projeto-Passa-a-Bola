@@ -33,7 +33,13 @@ export default function LojaComCarrinho() {
     },
   ]);
 
-  const [carrinho, setCarrinho] = useState([]);
+  const [carrinho, setCarrinho] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("carrinhoPassaBola");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
   const [carrinhoAberto, setCarrinhoAberto] = useState(false);
 
   useEffect(() => {
@@ -242,7 +248,12 @@ export default function LojaComCarrinho() {
               tabIndex={carrinho.length === 0 ? -1 : 0}
               aria-disabled={carrinho.length === 0}
               onClick={e => {
-                if (carrinho.length === 0) e.preventDefault();
+                if (carrinho.length === 0) {
+                  e.preventDefault();
+                } else {
+                  localStorage.removeItem("carrinhoPassaBola"); // Limpa o carrinho
+                  setCarrinho([]); // Limpa o estado do carrinho
+                }
               }}
             >
               Finalizar Compra
