@@ -62,12 +62,12 @@ const Formulario = () => {
   
 
   return (
-    <div className="flex items-center h-screen">
+    <div className="flex xl:justify-normal md:justify-normal justify-center items-center h-screen">
       <SideImage imageUrl="/taca.jpg" alt="Teste"/>
       <form className="bg-white w-1/2 h-screen p-2.5 shadow-[var(--shadow-8)] flex flex-col justify-center items-center" onSubmit={aoSalvar}>
         <div className="w-full max-w-[370px] mx-auto flex flex-col gap-5">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2 leading-tight uppercase" style={{fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.5px'}}>JUNTE-SE À COMUNIDADE<br/>PASSA A BOLA</h2>
-          <span className="text-gray-500 mb-4 text-base">Crie sua conta</span>
+          <h2 className="text-lg xl:text-2xl md:text-2xl font-bold text-gray-800 mb-2 leading-tight uppercase" style={{fontFamily: 'Poppins, sans-serif', letterSpacing: '-0.5px'}}>JUNTE-SE À COMUNIDADE<br/>PASSA A BOLA</h2>
+          <span className="text-gray-500 mb-4 text-sm">Crie sua conta</span>
           <CampoTexto
             placeholder="Nome Completo"
             obrigatorio={true}

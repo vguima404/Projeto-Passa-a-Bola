@@ -49,7 +49,7 @@ const Login = () => {
 
 
   return (
-    <div className="flex items-center h-screen">
+    <div className="flex xl:justify-normal md:justify-normal justify-center items-center h-screen">
       <SideImage imageUrl="/taca.jpg" alt="Login" />
       <form className="bg-white w-1/2 h-screen p-2.5 shadow-[var(--shadow-8)] flex flex-col justify-center items-center" onSubmit={aoLogar}>
         <div className="w-full max-w-[370px] mx-auto flex flex-col gap-5">
