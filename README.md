@@ -1,33 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Projeto Passa a Bola ⚽
 
-## Getting Started
+Projeto web full-stack para gerenciar usuários, estatísticas, RG, destaques (MVP), com frontend em Next.js + backend em Flask + banco de dados MongoDB + integrações externas (API de futebol, CEP via ViaCEP, etc.).
 
-First, run the development server:
+---
+
+## Tecnologias usadas
+
+- **Frontend**
+  - Next.js (React)
+  - Tailwind CSS 
+  - Ferramentas de lint / configuração: ESLint, arquivos de configuração do Next.js 
+- **Backend**
+  - Python (versão 3.x, idealmente ≥ 3.8)
+  - Flask (micro-framework web)
+  - MongoDB para banco de dados
+- **Integrações Externas**
+  - API de Futebol para buscar dados de campeonatos, partidas, fases, etc.
+  - ViaCEP para buscar endereço a partir de CEP
+- **Outras ferramentas e dependências**
+  - Sistema de variáveis de ambiente para segredos / tokens
+  - Possível uso de virtual environment no Python
+  - Gerenciamento de dependências JS (npm)
+  - Gerenciamento de requisições HTTP externas no backend
+  - Tratamento de CORS se frontend e backend estiverem em domínios diferentes
+
+---
+
+## Pré-requisitos
+
+Antes de começar, verifique se você tem instalado:
+
+- Node.js (versão compatível com Next.js; ex: 16 ou superior)
+- npm
+- Python 3.x (preferivelmente ≥ 3.8)
+- pip para instalar pacotes Python
+
+---
+
+## Instalação e execução
+
+Aqui vai o passo-a-passo para configurar tudo localmente:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Clone o repositório
+git clone https://github.com/vguima404/Projeto-Passa-a-Bola.git
+cd Projeto-Passa-a-Bola
+
+# 2. Configurar o backend (Flask)
+
+cd backend                         # ou onde estiver a pasta do backend
+python3 -m venv venv              # criar ambiente virtual
+.\venv\Scripts\activate
+
+pip install -r requirements.txt   # instalar dependências Python
+
+
+# 3. Configurar o frontend (Next.js)
+
+cd ..
+npm install  
+
+npm run dev                      # inicia frontend em modo de desenvolvimento 
+
+python main.py                    # inicia o backend 
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Abra [http://localhost:3000](http://localhost:3000) com seu navegador para ver o  resultado.
 
 ## API Endpoints (Documentação)
 
