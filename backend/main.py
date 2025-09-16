@@ -35,11 +35,10 @@ def login():
             "message": "Sucesso no Login",
             "user_id": str(user["_id"]),
             "name": user.get("nome"),
-            "admin": user.get("admin", False)  # adiciona info se é admin
+            "admin": user.get("admin", False)
         }), 200
     else:
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
-
 
 # =========================
 # LOGIN ADMIN
@@ -77,7 +76,6 @@ def admin_login():
     else:
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
 
-
 # =========================
 # GET USUÁRIO
 # =========================
@@ -106,7 +104,6 @@ def get_user(user_id):
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
-
 
 # =========================
 # ATUALIZAR USUÁRIO
@@ -151,7 +148,6 @@ def update_user(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-
 # =========================
 # ATUALIZAR ROLE (Jogadora ou Olheiro)
 # =========================
@@ -175,7 +171,6 @@ def update_role(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-
 # =========================
 # GET TODOS USUÁRIOS
 # =========================
@@ -189,6 +184,25 @@ def get_all_players():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
+# =========================
+# GET USERS PARA ADMIN
+# =========================
+@app.route("/admin/users", methods=["GET"])
+def get_all_players_admin():
+    try:
+        players = list(col.find({"cpf": {"$exists": True}}))
+        response = []
+        for p in players:
+            response.append({
+                "_id": str(p["_id"]),
+                "nome": p.get("nome", ""),
+                "tipo": p.get("tipo") or ("Jogadora" if p.get("jogadora") else "Olheiro" if p.get("olheiro") else ""),
+                "gols": p.get("gols", 0),
+                "defesas": p.get("defesas", 0)
+            })
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
 # TOP ESTATÍSTICAS
@@ -211,7 +225,6 @@ def get_top_stats():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
-
 
 # =========================
 # RUN
