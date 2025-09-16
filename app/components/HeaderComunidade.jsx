@@ -1,48 +1,92 @@
+'use client';
+
 import Link from 'next/link';
 import { FaUser, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 
 const HeaderComunidade = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleMeuPerfilClick = async () => {
+  const userId = localStorage.getItem("user_id");
+  if (!userId) {
+    alert("Usuário não logado.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+    const data = await res.json();
+
+    if (data.success) {
+      if (data.cpf) {
+        router.push(`/PerfilJogadora/${userId}`);
+      } else if (data.olheiro) {
+        router.push(`/PerfilOlheiro/${userId}`);
+      } else {
+        router.push(`/MeuPerfil/${userId}`);
+      }
+    } else {
+      alert("Erro ao buscar perfil: " + data.message);
+    }
+  } catch (err) {
+    console.error("Erro ao buscar perfil:", err);
+    alert("Erro ao buscar perfil.");
+  }
+};
 
   const navLinks = (isDrawer = false) => (
     <ul className={
       isDrawer
         ? "flex flex-col gap-8 text-center items-center w-full"
-        : "flex flex-row gap-4 md:gap-8 lg:gap-10 text-base md:text-lg items-center whitespace-nowrap"
+        : "flex flex-col lg:flex-row gap-8 lg:gap-10 text-center lg:text-left"
     }>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/PosLogin/1" onClick={()=>setMenuOpen(false)}>
+        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/PosLogin/1">
           Início
         </Link>
       </li>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/Comunidade/1/Highlights" onClick={()=>setMenuOpen(false)}>
-          Highlights
-        </Link>
+        <a
+          className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
+          href="#sobre"
+          onClick={e => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+        >
+          Sobre
+        </a>
       </li>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/Comunidade/1/ProximosJogos" onClick={()=>setMenuOpen(false)}>
+        <a
+          className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
+          href="/Comunidade/1/ProximosJogos/"
+          onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+        >
           Próximos Jogos
-        </Link>
+        </a>
       </li>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/Comunidade/1/BrasileiraoFeminino" onClick={()=>setMenuOpen(false)}>
+        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Comunidade/1/BrasileiraoFeminino" onClick={() => setMenuOpen(false)}>
           Brasileirão Feminino
         </Link>
       </li>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200" href="/Comunidade/1/Estatisticas" onClick={()=>setMenuOpen(false)}>
-          Estatísticas
+        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Loja/1" onClick={() => setMenuOpen(false)}>
+          Loja
         </Link>
       </li>
       <li>
-        <Link className="text-white font-semibold px-3 py-1 rounded-xl hover:bg-white/20 transition-all duration-200 flex items-center gap-2 justify-center" href="/MeuPerfil/1" onClick={()=>setMenuOpen(false)}>
+        {/* Aqui aplicamos a nova lógica de clique */}
+        <button
+          onClick={handleMeuPerfilClick}
+          className="text-white font-poppins text-xl hover:cursor-pointer font-semibold flex items-center gap-2 justify-center hover:underline"
+        >
           <FaUser className="inline-block text-lg" />
-          Meu Perfil
-        </Link>
+          Meu perfil
+        </button>
       </li>
       <ul>
         <Link
@@ -61,65 +105,51 @@ const HeaderComunidade = () => {
   );
 
   return (
-    <header
-      className="w-full flex justify-between items-center py-4 z-50 px-4 md:px-10 lg:px-24 xl:px-24 shadow-xl fixed top-0 left-0 right-0"
-      style={{
-        background: 'linear-gradient(90deg, #7c3aed 0%, #312e81 100%)',
-        boxShadow: "0 4px 24px 0 rgba(124,58,237,0.10)",
-      }}
-    >
-      {/* Logo */}
-      <img
-        src="/passa-a-bola-logo.png"
-        alt="Logo Passa a Bola"
-        width={60}
-        height={60}
-        className="drop-shadow-lg"
-      />
+    <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-purple-700 via-purple-600 to-purple-700 shadow-lg">
+      <div className="w-full flex justify-between items-center py-5 z-50 px-6 md:px-10 lg:px-56 relative">
+        <img src="/passa-a-bola-logo.png" alt="Logo Passa Bola Branca" width={60} height={60} />
 
-      {/* Menu desktop */}
-      <nav className="hidden lg:hidden xl:flex ">
-        {navLinks()}
-      </nav>
+        {/* Menu desktop */}
+        <nav className="hidden lg:hidden xl:block">
+          {navLinks()}
+        </nav>
 
-      {/* Botão hamburguer só aparece em telas <1024px e quando o menu não está aberto */}
-      {!menuOpen && (
-        <button
-          className="block lg:block xl:hidden text-white text-3xl focus:outline-none z-50"
-          aria-label="Abrir menu"
-          onClick={() => setMenuOpen(true)}
-        >
-          <FaBars />
-        </button>
-      )}
-
-      {/* Overlay do menu mobile (só aparece quando menuOpen) */}
-      {menuOpen && (
-        <>
-          {/* Overlay escuro */}
-          <div className="fixed inset-0 bg-opacity-60 z-40 transition-all" onClick={() => setMenuOpen(false)}></div>
-          {/* Drawer lateral */}
-          <div
-            className="fixed top-0 right-0 h-full w-full sm:w-80 md:w-80 lg:w-80 z-50 flex flex-col items-center justify-center transition-transform duration-300 lg:flex"
-            style={{ maxWidth: '100vw',
-              backgroundImage: 'linear-gradient(90deg, #7c3aed 0%, #312e81 100%)'
-          }}
+        {/* Botão hamburguer */}
+        {!menuOpen && (
+          <button
+            className="block lg:block xl:hidden text-white text-3xl focus:outline-none z-50"
+            aria-label="Abrir menu"
+            onClick={() => setMenuOpen(true)}
           >
-            <button
-              className="absolute top-6 right-6 text-white text-3xl focus:outline-none"
-              aria-label="Fechar menu"
-              onClick={() => setMenuOpen(false)}
+            <FaBars />
+          </button>
+        )}
+
+        {/* Overlay e drawer mobile */}
+        {menuOpen && (
+          <>
+            <div className="fixed inset-0 bg-opacity-60 z-40 transition-all" onClick={() => setMenuOpen(false)}></div>
+            <div
+              className="fixed top-0 right-0 h-full w-full sm:w-80 md:w-80 lg:w-80 bg-purple-500 z-50 flex flex-col items-center justify-center transition-transform duration-300 lg:flex-col lg:flex lg:top-0 lg:h-full xl:hidden"
+              style={{ maxWidth: '100vw', backgroundImage: 'linear-gradient(90deg, #7c3aed 0%, #312e81 100%)' }}
             >
-              <FaTimes />
-            </button>
-            <nav>
-              {navLinks(true)}
-            </nav>
-          </div>
-        </>
-      )}
+              <button
+                className="absolute top-6 right-6 text-white text-3xl focus:outline-none"
+                aria-label="Fechar menu"
+                onClick={() => setMenuOpen(false)}
+              >
+                <FaTimes />
+              </button>
+              <nav>
+                {navLinks(true)}
+              </nav>
+            </div>
+          </>
+        )}
+      </div>
     </header>
   );
-}
+};
+
 
 export default HeaderComunidade;

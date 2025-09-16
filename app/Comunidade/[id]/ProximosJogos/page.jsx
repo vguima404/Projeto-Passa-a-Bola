@@ -19,8 +19,7 @@ export default function ProximosJogos() {
   return (
     <>
     <HeaderComunidade/>
-    <div className="p-8 min-h-screen bg-gradient-to-br from-purple-100 via-
-    white to-yellow-100">
+    <div className="p-8 min-h-screen bg-gradient-to-br from-blue-200 via-white to-purple-200">
       <h1 className="text-3xl font-extrabold mb-10 text-center text-purple-700 drop-shadow-lg tracking-wide animate-fade-in">
         Chaveamento dos Jogos
       </h1>
