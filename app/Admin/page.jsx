@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -14,16 +13,17 @@ const AdminLogin = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("/api/admin-login", {
+      const res = await fetch("http://localhost:5000/admin-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (data.success) {
-        router.push("/Admin/Dashboard");
+
+      if (data.success && data.user?.admin === true) {
+        router.push("/Admin/AdminPosLogin");
       } else {
-        setError("Usuário ou senha inválidos.");
+        setError("Acesso negado. Apenas administradores podem entrar.");
       }
     } catch {
       setError("Erro ao conectar ao servidor.");
@@ -40,10 +40,10 @@ const AdminLogin = () => {
           Admin Login
         </h1>
         <input
-          type="text"
-          placeholder="Usuário"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="border rounded px-3 py-2"
           required
         />
@@ -56,12 +56,12 @@ const AdminLogin = () => {
           required
         />
         {error && <div className="text-red-500 text-sm">{error}</div>}
-        <Link
-          href={"/Admin/AdminPosLogin"}
+        <button
+          type="submit"
           className="bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
         >
           Entrar
-        </Link>
+        </button>
       </form>
     </div>
   );

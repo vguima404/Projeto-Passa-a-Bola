@@ -13,7 +13,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_cred
 app.register_blueprint(register_bp)
 
 # =========================
-# LOGIN
+# LOGIN NORMAL
 # =========================
 @app.route("/login", methods=["POST", "OPTIONS"])
 def login():
@@ -34,10 +34,49 @@ def login():
             "success": True,
             "message": "Sucesso no Login",
             "user_id": str(user["_id"]),
-            "name": user.get("nome")
+            "name": user.get("nome"),
+            "admin": user.get("admin", False)  # adiciona info se é admin
         }), 200
     else:
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
+
+
+# =========================
+# LOGIN ADMIN
+# =========================
+@app.route("/admin-login", methods=["POST", "OPTIONS"])
+def admin_login():
+    if request.method == "OPTIONS":
+        return jsonify({"success": True}), 200
+
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"success": False, "message": "Email and password required"}), 400
+
+    user = col.find_one({"email": email, "senha": password})
+
+    if user and user.get("admin") is True:
+        return jsonify({
+            "success": True,
+            "message": "Admin login successful",
+            "user": {
+                "user_id": str(user["_id"]),
+                "name": user.get("nome"),
+                "email": user.get("email"),
+                "admin": True
+            }
+        }), 200
+    elif user:
+        return jsonify({
+            "success": False,
+            "message": "Acesso negado. Este usuário não é administrador."
+        }), 403
+    else:
+        return jsonify({"success": False, "message": "Invalid email or password"}), 401
+
 
 # =========================
 # GET USUÁRIO
@@ -62,10 +101,12 @@ def get_user(user_id):
             "gols": user.get("gols", 0),
             "defesas": user.get("defesas", 0),
             "jogadora": user.get("jogadora", False),
-            "olheiro": user.get("olheiro", False)
+            "olheiro": user.get("olheiro", False),
+            "admin": user.get("admin", False)
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
+
 
 # =========================
 # ATUALIZAR USUÁRIO
@@ -110,6 +151,7 @@ def update_user(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
+
 # =========================
 # ATUALIZAR ROLE (Jogadora ou Olheiro)
 # =========================
@@ -122,7 +164,7 @@ def update_role(user_id):
         if role not in ["jogadora", "olheiro"]:
             return jsonify({"success": False, "message": "Role inválida"}), 400
 
-        update_data = {role: True}  # adiciona jogadora: True ou olheiro: True
+        update_data = {role: True}
         result = col.update_one({"_id": ObjectId(user_id)}, {"$set": update_data})
 
         if result.modified_count > 0:
@@ -132,6 +174,7 @@ def update_role(user_id):
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
+
 
 # =========================
 # GET TODOS USUÁRIOS
@@ -145,6 +188,7 @@ def get_all_players():
         return jsonify(players), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
+
 
 # =========================
 # TOP ESTATÍSTICAS
@@ -167,6 +211,7 @@ def get_top_stats():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
+
 
 # =========================
 # RUN
