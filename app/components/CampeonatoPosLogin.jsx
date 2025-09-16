@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function Campeonato() {
+export default function CampeonatoPosLogin() {
   return (
     <section id="campeonato" className="bg-gray-100 py-20 px-6">
       <div className="max-w-6xl mx-auto space-y-20">
@@ -57,7 +57,7 @@ export default function Campeonato() {
             Mais do que partidas, a Copa é um movimento que inspira e conecta pessoas.
           </h3>
           <Link
-            href="/Cadastro/1"
+            href="/Comunidade/1/ProximosJogos"
             className="inline-block px-8 py-3 rounded-2xl bg-purple-600 text-white font-medium shadow hover:bg-transparent hover:text-purple-600 hover:border transition duration-500 text-lg"
           >
             Veja os próximos jogos

@@ -50,24 +50,24 @@ const HeaderComunidade = () => {
           Início
         </Link>
       </li>
-      <li>
-        <a
-          className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
-          href="#sobre"
-          onClick={e => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
-        >
-          Sobre
-        </a>
-      </li>
-      <li>
-        <a
-          className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
-          href="/Comunidade/1/ProximosJogos/"
-          onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
-        >
-          Próximos Jogos
-        </a>
-      </li>
+        <li>
+          <Link
+            className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
+            href="/Comunidade/1/ProximosJogos/"
+            onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+          >
+            Próximos Jogos
+          </Link>
+        </li>
+        <li>
+          <Link
+            className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
+            href="/Comunidade/1/Highlights"
+            onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+          >
+            Highlights
+          </Link>
+        </li>
       <li>
         <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Comunidade/1/BrasileiraoFeminino" onClick={() => setMenuOpen(false)}>
           Brasileirão Feminino

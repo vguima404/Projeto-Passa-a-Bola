@@ -2,7 +2,7 @@
 import Link from "next/link";
 import HeaderPosLogin from "../../components/HeaderPosLogin";
 import Sobre from "../../components/Sobre";
-import Campeonato from "../../components/Campeonato";
+import CampeonatoPosLogin from "../../components/CampeonatoPosLogin";
 import Footer from "../../components/Footer";
 
 
@@ -32,7 +32,7 @@ export default function Home() {
         <Sobre />
 
       {/* COPA PASSA BOLA */}
-      <Campeonato />
+      <CampeonatoPosLogin />
 
       {/* FOOTER */}
       <Footer />
