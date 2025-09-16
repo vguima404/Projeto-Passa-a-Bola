@@ -5,3 +5,4 @@ sqlalchemy
 pydantic
 pymongo
 flask
+flask_cors

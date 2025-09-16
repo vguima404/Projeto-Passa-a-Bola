@@ -104,8 +104,8 @@ const Formulario = () => {
           {erroTermos && (
             <span className="text-red-600 text-xs font-medium">{erroTermos}</span>
           )}
-          <Button type="submit" disabled={sucesso}>CADASTRAR-SE</Button>
           <Checkbox label="Li e concordo com os Termos!" checked={aceitouTermos} onChange={e => setAceitouTermos(e.target.checked)} />
+          <Button type="submit" disabled={sucesso}>CADASTRAR-SE</Button>
         </div>
       </form>
     </div>
