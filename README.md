@@ -1,10 +1,18 @@
-# Projeto Passa a Bola ⚽
+# ⚽Projeto Passa a Bola 
 
 Projeto web full-stack para gerenciar usuários, estatísticas, RG, destaques (MVP), com frontend em Next.js + backend em Flask + banco de dados MongoDB + integrações externas (API de futebol, CEP via ViaCEP, etc.).
 
 ---
 
-## Tecnologias usadas
+## 👥 Integrantes
+
+- **Felipe Andrade**
+- **Guilherme Augusto**
+- **Raphael Taketa**
+- **Victor Guimarães**
+
+---
+## 💻 Tecnologias usadas
 
 - **Frontend**
   - Next.js (React)
@@ -26,7 +34,7 @@ Projeto web full-stack para gerenciar usuários, estatísticas, RG, destaques (M
 
 ---
 
-## Pré-requisitos
+## 📋Pré-requisitos
 
 Antes de começar, verifique se você tem instalado:
 
@@ -37,7 +45,7 @@ Antes de começar, verifique se você tem instalado:
 
 ---
 
-## Instalação e execução
+## 📶Instalação e execução
 
 Aqui vai o passo-a-passo para configurar tudo localmente:
 
