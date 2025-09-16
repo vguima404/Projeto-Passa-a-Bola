@@ -40,19 +40,9 @@ const Header = () => {
         </a>
       </li>
       <li>
-        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Comunidade/1/Highlights/" onClick={()=>setMenuOpen(false)}>
-          Comunidade
-        </Link>
-      </li>
-      <li>
-        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Loja/1" onClick={()=>setMenuOpen(false)}>
-          Loja
-        </Link>
-      </li>
-      <li>
         <Link className="text-white font-poppins text-xl font-semibold hover:underline flex items-center gap-2 justify-center" href="/Login/1" onClick={()=>setMenuOpen(false)}>
-          Login
           <FaUser className="inline-block text-lg" />
+          Login
         </Link>
       </li>
     </ul>

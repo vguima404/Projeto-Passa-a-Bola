@@ -23,7 +23,7 @@ export default function Campeonato() {
           <img
             src="/grupo.jpg"
             alt="Grupo de jogadoras reunidas em grupo junto com a Ale Xavier e Luana Maluf"
-            className="rounded-2xl shadow-lg"
+            className="rounded-lg shadow-lg"
           />
         </div>
 

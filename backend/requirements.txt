@@ -4,3 +4,5 @@ python-dotenv
 sqlalchemy
 pydantic
 pymongo
+flask
+flask_cors

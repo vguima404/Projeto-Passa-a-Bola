@@ -1,0 +1,9 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend do Projeto Passa a Bola (Python)",
+  "main": "main.py",
+  "scripts": {},
+  "author": "",
+  "license": "MIT"
+}

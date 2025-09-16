@@ -1,33 +1,41 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSearch, FaInstagram, FaFacebook } from "react-icons/fa";
 import BackHomeButton from "../../components/VoltarHome";
 
 export default function OlheiroProfile() {
   const [filter, setFilter] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [players, setPlayers] = useState([]); // jogadores do banco
 
-  // Mock de jogadoras
-  const players = [
-    {
-      id: 1,
-      name: "Ale Xavier",
-      position: "Atacante",
-      photo: "/perfilJogadoraAle.jpeg",
-      socials: { instagram: "https://www.instagram.com/alexavier", facebook: "#" },
-      achievements: ["MVP", "Artilheira"],
-      matches: ["Vitória contra Time X", "Derrota contra Time Y"],
-    },
-    {
-      id: 2,
-      name: "Luana Maluf",
-      position: "Goleira",
-      photo: "/fotoPerfilLuana.jpg",
-      socials: { instagram: "https://www.instagram.com/luanamaluf", facebook: "#" },
-      achievements: ["Muralha"],
-      matches: ["Vitória contra Time Z", "Vitória contra Time W"],
-    },
-  ];
+  // =========================
+  // Buscar todas as jogadoras do backend
+  // =========================
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/users") // rota GET /users que você vai criar no Flask
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          // Filtra apenas os usuários que possuem "cpf" (jogadoras)
+          const jogadoras = data.filter((u) => u.cpf);
+          setPlayers(
+            jogadoras.map((u) => ({
+              id: u._id,
+              name: u.nome || "Sem nome",
+              position: u.position || "",
+              photo: u.photoUrl || "/default-player.jpg",
+              socials: u.socials || { instagram: "", facebook: "" },
+              achievements: u.achievements || [],
+              matches: u.matches || [],
+              cpf: u.cpf, // garante que é jogadora
+            }))
+          );
+        } else {
+          console.error("Dados inválidos recebidos do backend:", data);
+        }
+      })
+      .catch((err) => console.error("Erro ao buscar jogadoras:", err));
+  }, []);
 
   const filteredPlayers = players.filter((p) =>
     p.position.toLowerCase().includes(filter.toLowerCase())
@@ -47,11 +55,9 @@ export default function OlheiroProfile() {
             <h1 className="text-2xl font-bold text-gray-800">João Pereira</h1>
             <p className="text-gray-600">Time: Corinthians</p>
             <p className="text-gray-600">Cargo: Olheiro</p>
-            <p className="text-gray-500 text-sm mt-2">
-              Documento verificado: RG enviado
-            </p>
+            <p className="text-gray-500 text-sm mt-2">Documento verificado: RG enviado</p>
           </div>
-          <div className="flex justify-end w-full ">
+          <div className="flex justify-end w-full">
             <BackHomeButton />
           </div>
         </div>
@@ -92,9 +98,7 @@ export default function OlheiroProfile() {
         {/* Detalhes da jogadora */}
         {selectedPlayer && (
           <div className="mt-10 border-t pt-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              Detalhes da Jogadora
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Detalhes da Jogadora</h2>
             <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
               <img
                 src={selectedPlayer.photo}
@@ -105,7 +109,7 @@ export default function OlheiroProfile() {
                 <h3 className="text-2xl font-bold">{selectedPlayer.name}</h3>
                 <p className="text-gray-600">{selectedPlayer.position}</p>
                 <div className="flex gap-4 mt-3 text-xl text-purple-600">
-                  {selectedPlayer.socials.instagram && (
+                  {selectedPlayer.socials?.instagram && (
                     <a
                       href={selectedPlayer.socials.instagram}
                       target="_blank"
@@ -114,7 +118,7 @@ export default function OlheiroProfile() {
                       <FaInstagram />
                     </a>
                   )}
-                  {selectedPlayer.socials.facebook && (
+                  {selectedPlayer.socials?.facebook && (
                     <a
                       href={selectedPlayer.socials.facebook}
                       target="_blank"
@@ -144,9 +148,7 @@ export default function OlheiroProfile() {
 
             {/* Histórico de partidas */}
             <div className="mt-6">
-              <h4 className="font-semibold text-gray-800 mb-2">
-                Histórico de Partidas:
-              </h4>
+              <h4 className="font-semibold text-gray-800 mb-2">Histórico de Partidas:</h4>
               <ul className="list-disc pl-5 text-gray-600">
                 {selectedPlayer.matches.map((m, i) => (
                   <li key={i}>{m}</li>
