@@ -227,6 +227,23 @@ def get_top_stats():
         return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
+# REMOVER USUÁRIO
+# =========================
+@app.route("/user/<user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    try:
+        user = col.find_one({"_id": ObjectId(user_id)})
+        if user and user.get("admin", False):
+            return jsonify({"success": False, "message": "Usuário admin não pode ser removido"}), 403
+        result = col.delete_one({"_id": ObjectId(user_id)})
+        if result.deleted_count > 0:
+            return jsonify({"success": True, "message": "Usuário removido com sucesso"}), 200
+        else:
+            return jsonify({"success": False, "message": "Usuário não encontrado"}), 404
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+# =========================
 # RUN
 # =========================
 if __name__ == "__main__":

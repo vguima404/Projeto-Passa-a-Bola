@@ -48,6 +48,21 @@ export default function AdminPosLogin() {
     }
   };
 
+  // Função para remover usuário
+  const handleDelete = async (userId) => {
+    if (!window.confirm("Tem certeza que deseja remover este usuário?")) return;
+    try {
+      await fetch(`http://localhost:5000/user/${userId}`, {
+        method: "DELETE",
+      });
+      // Atualiza lista
+      const res = await fetch("http://localhost:5000/users");
+      setUsuarios(await res.json());
+    } catch (err) {
+      console.error("Erro ao remover usuário:", err);
+    }
+  };
+
   if (loading) return <div>Carregando usuários...</div>;
 
   return (
@@ -94,14 +109,23 @@ export default function AdminPosLogin() {
                   user.defesas || 0
                 )}
               </td>
-              <td className="p-2 border border-gray-300 text-center">
+              <td className="p-2 border border-gray-300 text-center flex gap-2 justify-center">
                 {editId !== user._id ? (
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleEdit(user)}
-                  >
-                    Editar
-                  </button>
+                  <>
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 rounded"
+                      onClick={() => handleEdit(user)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className={`px-2 py-1 rounded ${user.admin ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 text-white"}`}
+                      onClick={() => !user.admin && handleDelete(user._id)}
+                      disabled={user.admin}
+                    >
+                      Remover
+                    </button>
+                  </>
                 ) : (
                   <button
                     className="bg-green-600 text-white px-2 py-1 rounded"

@@ -74,6 +74,11 @@ const HeaderComunidade = () => {
         </Link>
       </li>
       <li>
+        <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Comunidade/1/Estatisticas" onClick={() => setMenuOpen(false)}>
+          Estatísticas
+        </Link>
+      </li>
+      <li>
         <Link className="text-white font-poppins text-xl font-semibold hover:underline" href="/Loja/1" onClick={() => setMenuOpen(false)}>
           Loja
         </Link>
