@@ -31,23 +31,89 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## API Endpoints (Documentação)
 
-### Exemplo de endpoints utilizados no frontend:
+### Endpoints do Backend Flask (MongoDB)
 
-- **Buscar jogos do campeonato**
+- **Login usuário:**  
+  `POST http://localhost:5000/login`
 
-  - `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases/{fase_id}`
-  - Parâmetros: `campeonato_id` (ID do campeonato), `fase_id` (ID da fase)
-  - Retorna: Dados das partidas da fase
+- **Login admin:**  
+  `POST http://localhost:5000/admin-login`
 
-- **Buscar fases do campeonato**
+- **Cadastro de usuário:**  
+  `POST http://localhost:5000/register`
 
-  - `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases`
-  - Parâmetros: `campeonato_id` (ID do campeonato)
-  - Retorna: Lista de fases disponíveis
+- **Buscar todos os usuários:**  
+  `GET http://localhost:5000/users`
 
-- **Buscar endereço por CEP**
-  - `GET https://viacep.com.br/ws/{cep}/json/`
-  - Parâmetros: `cep` (CEP brasileiro)
-  - Retorna: Dados de endereço (logradouro, bairro, cidade, estado)
+- **Buscar usuário por ID:**  
+  `GET http://localhost:5000/user/<user_id>`
 
-Adapte conforme novos endpoints forem utilizados no projeto.
+- **Atualizar usuário:**  
+  `PUT http://localhost:5000/user/<user_id>`
+
+- **Remover usuário:**  
+  `DELETE http://localhost:5000/user/<user_id>`
+
+- **Atualizar estatísticas (gols/defesas):**  
+  `PUT http://localhost:5000/user/<user_id>/estatisticas`
+
+- **Atualizar status do RG:**  
+  `PUT http://localhost:5000/user/<user_id>/rg`
+
+- **Remover highlight (MVP):**  
+  `DELETE http://localhost:5000/highlight/<highlight_id>`
+
+- **Buscar estatísticas de gols e defesas (todos os usuários):**  
+  `GET http://localhost:5000/estatisticas`
+
+- **Buscar estatísticas de gols e defesas (usuário específico):**  
+  `GET http://localhost:5000/user/<user_id>/estatisticas`
+
+---
+
+### Endpoints da API Futebol (Brasileirão Feminino)
+
+- **Buscar partidas do Brasileirão Feminino Série A1:**  
+  `GET https://api.api-futebol.com.br/v1/campeonatos/71/partidas`  
+  _(Header: Authorization: Bearer test_698f6775d842f26a03f89bd4ec09f4)_
+
+- **Buscar jogos do campeonato (por fase):**  
+  `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases/{fase_id}`
+
+- **Buscar fases do campeonato:**  
+  `GET https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases`
+
+---
+
+### Endpoints de Serviços Externos
+
+- **Buscar endereço por CEP (ViaCEP):**  
+  `GET https://viacep.com.br/ws/{cep}/json/`
+
+---
+
+### Resumo dos Endpoints
+
+```text
+# Backend Flask
+POST    http://localhost:5000/login
+POST    http://localhost:5000/admin-login
+POST    http://localhost:5000/register
+GET     http://localhost:5000/users
+GET     http://localhost:5000/user/<user_id>
+PUT     http://localhost:5000/user/<user_id>
+DELETE  http://localhost:5000/user/<user_id>
+PUT     http://localhost:5000/user/<user_id>/estatisticas
+PUT     http://localhost:5000/user/<user_id>/rg
+DELETE  http://localhost:5000/highlight/<highlight_id>
+GET     http://localhost:5000/estatisticas
+GET     http://localhost:5000/user/<user_id>/estatisticas
+
+# API Futebol
+GET     https://api.api-futebol.com.br/v1/campeonatos/71/partidas
+GET     https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases/{fase_id}
+GET     https://api.api-futebol.com.br/v1/campeonatos/{campeonato_id}/fases
+
+# ViaCEP
+GET     https://viacep.com.br/ws/{cep}/json/
+```
