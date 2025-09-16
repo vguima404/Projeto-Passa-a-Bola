@@ -60,7 +60,9 @@ def get_user(user_id):
             "achievements": user.get("achievements", []),
             "matches": user.get("matches", []),
             "gols": user.get("gols", 0),
-            "defesas": user.get("defesas", 0)         
+            "defesas": user.get("defesas", 0),
+            "jogadora": user.get("jogadora", False),
+            "olheiro": user.get("olheiro", False)
         }), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
@@ -109,44 +111,60 @@ def update_user(user_id):
         return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
+# ATUALIZAR ROLE (Jogadora ou Olheiro)
+# =========================
+@app.route("/user/<user_id>/role", methods=["PUT"])
+def update_role(user_id):
+    try:
+        data = request.json
+        role = data.get("role")  # "jogadora" ou "olheiro"
+
+        if role not in ["jogadora", "olheiro"]:
+            return jsonify({"success": False, "message": "Role inválida"}), 400
+
+        update_data = {role: True}  # adiciona jogadora: True ou olheiro: True
+        result = col.update_one({"_id": ObjectId(user_id)}, {"$set": update_data})
+
+        if result.modified_count > 0:
+            return jsonify({"success": True, "message": f"{role.capitalize()} habilitada"}), 200
+        else:
+            return jsonify({"success": False, "message": "Nada foi alterado"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+
+# =========================
 # GET TODOS USUÁRIOS
 # =========================
 @app.route("/users", methods=["GET"])
 def get_all_players():
     try:
-        players = list(col.find({"cpf": {"$exists": True}}))  # apenas jogadores cadastrados
+        players = list(col.find({"cpf": {"$exists": True}}))
         for p in players:
-            p["_id"] = str(p["_id"])  # converte ObjectId para string
+            p["_id"] = str(p["_id"])
         return jsonify(players), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
 # =========================
-# TOP ESTATÍSTICAS (artilheiras + goleiras)
+# TOP ESTATÍSTICAS
 # =========================
 @app.route("/top-stats", methods=["GET"])
 def get_top_stats():
     try:
-        # Top 3 gols
-        top_gols = list(col.find(
-            {}, {"nome": 1, "gols": 1, "photoUrl": 1, "_id": 0}
-        ).sort("gols", -1).limit(3))
+        top_gols = list(col.find({}, {"nome": 1, "gols": 1, "photoUrl": 1, "_id": 0}).sort("gols", -1).limit(3))
+        top_defesas = list(col.find({}, {"nome": 1, "defesas": 1, "photoUrl": 1, "_id": 0}).sort("defesas", -1).limit(3))
 
-        # Top 3 defesas
-        top_defesas = list(col.find(
-            {}, {"nome": 1, "defesas": 1, "photoUrl": 1, "_id": 0}
-        ).sort("defesas", -1).limit(3))
+        gols = [{"name": p.get("nome", ""), "image": p.get("photoUrl", "/placeholder-player.png"), "gols": p.get("gols", 0)} for p in top_gols]
+        defesas = [{"name": p.get("nome", ""), "image": p.get("photoUrl", "/placeholder-player.png"), "defesas": p.get("defesas", 0)} for p in top_defesas]
 
-        # Completa com "slots vazios" se faltar jogadoras
-        while len(top_gols) < 3:
-            top_gols.append({"nome": "", "gols": 0, "photoUrl": ""})
-        while len(top_defesas) < 3:
-            top_defesas.append({"nome": "", "defesas": 0, "photoUrl": ""})
+        while len(gols) < 3:
+            gols.append({"name": "", "image": "/placeholder-player.png", "gols": 0})
+        while len(defesas) < 3:
+            defesas.append({"name": "", "image": "/placeholder-player.png", "defesas": 0})
 
-        return jsonify({
-            "gols": top_gols,
-            "defesas": top_defesas
-        }), 200
+        return jsonify({"gols": gols, "defesas": defesas}), 200
+
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
