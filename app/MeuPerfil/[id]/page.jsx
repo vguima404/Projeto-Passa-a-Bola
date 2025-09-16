@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaMedal, FaCamera } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import BackHomeButton from "../../../app/components/VoltarHome";
 
 export default function Profile() {
