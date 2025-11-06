@@ -1,4 +1,4 @@
-# ⚽Projeto Passa a Bola 
+# ⚽Projeto Passa a Bola
 
 Projeto web full-stack para gerenciar usuários, estatísticas, RG, destaques (MVP), com frontend em Next.js + backend em Flask + banco de dados MongoDB + integrações externas (API de futebol, CEP via ViaCEP, etc.).
 
@@ -12,12 +12,13 @@ Projeto web full-stack para gerenciar usuários, estatísticas, RG, destaques (M
 - **Victor Guimarães**
 
 ---
+
 ## 💻 Tecnologias usadas
 
 - **Frontend**
   - Next.js (React)
-  - Tailwind CSS 
-  - Ferramentas de lint / configuração: ESLint, arquivos de configuração do Next.js 
+  - Tailwind CSS
+  - Ferramentas de lint / configuração: ESLint, arquivos de configuração do Next.js
 - **Backend**
   - Python (versão 3.x, idealmente ≥ 3.8)
   - Flask (micro-framework web)
@@ -66,15 +67,74 @@ pip install -r requirements.txt   # instalar dependências Python
 # 3. Configurar o frontend (Next.js)
 
 cd ..
-npm install  
+npm install
 
-npm run dev                      # inicia frontend em modo de desenvolvimento 
+npm run dev                      # inicia frontend em modo de desenvolvimento
 
-python main.py                    # inicia o backend 
+python main.py                    # inicia o backend
 
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) com seu navegador para ver o  resultado.
+Abra [http://localhost:3000](http://localhost:3000) com seu navegador para ver o resultado.
+
+## 🧍‍♀️ Dashboard da Jogadora (mock via Next API)
+
+O perfil da jogadora (`/PerfilJogadora/[id]`) exibe um Dashboard dinâmico com:
+
+- Estatísticas pessoais (jogos, gols, assistências, posição, nota média)
+- Mídia (vídeos enviados e engajamento)
+- Competições e peneiras
+- Mensagens de olheiros e convites
+- Recomendações de times próximos
+- Feedback técnico
+
+Para facilitar o desenvolvimento frontend, criamos rotas de API mock no Next.js. Esses endpoints retornam dados de exemplo e podem ser substituídos pela integração real com o backend Flask quando estiver disponível.
+
+Endpoints mock criados (Next.js App Router):
+
+```
+GET /api/player/[id]/stats
+GET /api/player/[id]/media
+GET /api/player/[id]/competitions
+GET /api/player/[id]/recommendations
+GET /api/player/[id]/feedback
+```
+
+Integração futura: troque os fetch do componente `app/components/dashboard/PlayerDashboard.jsx` para chamar o backend Flask (ex.: `http://localhost:5000/...`) e remova/ajuste os endpoints mock conforme necessário.
+
+### Opcional: usar JSON local
+
+Para facilitar testes sem backend, as rotas acima tentam carregar dados de arquivos JSON em `public/data/player/{id}` quando disponíveis. Se o arquivo não existir, elas retornam um mock padrão.
+
+Estrutura esperada:
+
+```
+public/
+  data/
+    player/
+      1/
+        stats.json
+        media.json
+        competitions.json
+        recommendations.json
+        feedback.json
+```
+
+Exemplo de `stats.json`:
+
+```
+{
+  "playerId": "1",
+  "matches": 28,
+  "goals": 15,
+  "assists": 9,
+  "position": "Atacante",
+  "ratingAvg": 8.4,
+  "wins": 18
+}
+```
+
+Abra `/PerfilJogadora/1` para ver o dashboard consumindo esses arquivos locais. Você pode criar outras pastas por `id` (por exemplo, `2`, `demo`) e acessar `/PerfilJogadora/{id}` correspondente.
 
 ## API Endpoints (Documentação)
 

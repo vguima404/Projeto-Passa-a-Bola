@@ -1,0 +1,16 @@
+[
+  {
+    "id": "c1",
+    "name": "Copa Passa a Bola",
+    "status": "inscrita",
+    "result": null,
+    "startDate": "2025-11-10T00:00:00.000Z"
+  },
+  {
+    "id": "c2",
+    "name": "Liga Metropolitana",
+    "status": "concluída",
+    "result": "Semifinal",
+    "startDate": "2025-09-20T00:00:00.000Z"
+  }
+]

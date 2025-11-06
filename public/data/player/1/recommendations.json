@@ -1,0 +1,19 @@
+[
+  {
+    "id": "r1",
+    "team": "Associação Atlética Local",
+    "positions": [
+      "Atacante",
+      "Ponta"
+    ],
+    "distanceKm": 4.3
+  },
+  {
+    "id": "r2",
+    "team": "Esporte Clube Bairro",
+    "positions": [
+      "Meia"
+    ],
+    "distanceKm": 7.8
+  }
+]

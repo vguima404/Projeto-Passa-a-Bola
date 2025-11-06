@@ -1,0 +1,37 @@
+{
+  "playerId": "1",
+  "items": [
+    {
+      "id": "v1",
+      "title": "Highlights vs Time X",
+      "views": 1400,
+      "likes": 210,
+      "comments": 28,
+      "createdAt": "2025-10-28T12:00:00.000Z",
+      "visibility": "público"
+    },
+    {
+      "id": "v2",
+      "title": "Treino de finalização",
+      "views": 900,
+      "likes": 110,
+      "comments": 14,
+      "createdAt": "2025-11-02T12:00:00.000Z",
+      "visibility": "público"
+    },
+    {
+      "id": "v3",
+      "title": "Assistências da semana",
+      "views": 650,
+      "likes": 80,
+      "comments": 10,
+      "createdAt": "2025-11-05T12:00:00.000Z",
+      "visibility": "público"
+    }
+  ],
+  "totals": {
+    "views": 2950,
+    "likes": 400,
+    "comments": 52
+  }
+}

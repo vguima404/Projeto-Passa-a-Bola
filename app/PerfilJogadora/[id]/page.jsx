@@ -9,6 +9,7 @@ import ProfileTeam from "../../components/profile/ProfileTeam";
 import ProfilePurchaseHistory from "../../components/profile/ProfilePurchaseHistory";
 import PlayerRegistrationForm from "../../components/profile/PlayerRegistrationForm";
 import BackHomeButton from "../../components/VoltarHome"; 
+import PlayerDashboard from "../../components/dashboard/PlayerDashboard";
 
 /* =========================
    Helpers
@@ -43,31 +44,36 @@ const initialProfile = {
 /* =========================
    PlayerProfilePage
    ========================= */
-export default function PlayerProfilePage() {
+export default function PlayerProfilePage({ params }) {
   const [profile, setProfile] = useState(initialProfile);
   const [editing, setEditing] = useState(false);
+  const [playerId, setPlayerId] = useState(params?.id || null);
 
   /* =========================
      Busca dados do usuário logado
      ========================= */
   useEffect(() => {
-    const userId = localStorage.getItem("user_id");
-    if (!userId) return;
+    let id = params?.id;
+    if (!id && typeof window !== "undefined") {
+      id = localStorage.getItem("user_id");
+      setPlayerId(id);
+    }
+    if (!id) return;
 
-    fetch(`http://127.0.0.1:5000/user/${userId}`)
+    fetch(`http://127.0.0.1:5000/user/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setProfile({
             ...data,
-            id: userId,
+            id,
           });
         } else {
           console.error("Erro ao buscar usuário:", data.message);
         }
       })
       .catch((err) => console.error("Erro ao buscar usuário:", err));
-  }, []);
+  }, [params?.id]);
 
   /* =========================
      Salvar alterações (incluindo CPF)
@@ -121,6 +127,11 @@ export default function PlayerProfilePage() {
             </div>
           </div>
         )}
+        {/* Dashboard Dinâmico */}
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">Dashboard da Jogadora</h2>
+          <PlayerDashboard playerId={playerId || profile.id} />
+        </div>
       </div>
     </div>
   );

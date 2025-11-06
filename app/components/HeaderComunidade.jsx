@@ -54,7 +54,7 @@ const HeaderComunidade = () => {
           <Link
             className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
             href="/Comunidade/1/ProximosJogos/"
-            onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+            onClick={() => setMenuOpen(false)}
           >
             Próximos Jogos
           </Link>
@@ -63,7 +63,7 @@ const HeaderComunidade = () => {
           <Link
             className="text-white font-poppins text-xl font-semibold hover:underline cursor-pointer"
             href="/Comunidade/1/Highlights"
-            onClick={e => { e.preventDefault(); document.getElementById('campeonato')?.scrollIntoView({behavior: 'smooth'}); setMenuOpen(false); }}
+            onClick={() => setMenuOpen(false)}
           >
             Highlights
           </Link>
