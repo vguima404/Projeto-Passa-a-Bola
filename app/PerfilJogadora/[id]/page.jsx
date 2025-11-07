@@ -11,6 +11,8 @@ import PlayerRegistrationForm from "../../components/profile/PlayerRegistrationF
 import BackHomeButton from "../../components/VoltarHome"; 
 import PlayerDashboard from "../../components/dashboard/PlayerDashboard";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 /* =========================
    Helpers
    ========================= */
@@ -60,7 +62,7 @@ export default function PlayerProfilePage({ params }) {
     }
     if (!id) return;
 
-    fetch(`http://127.0.0.1:5000/user/${id}`)
+    fetch(`${API_BASE}/user/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -85,7 +87,7 @@ export default function PlayerProfilePage({ params }) {
     if (!profile.id) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:5000/user/${profile.id}`, {
+      const response = await fetch(`${API_BASE}/user/${profile.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updated), // envia CPF, foto, posição etc

@@ -6,6 +6,8 @@ import SideImage from "./SideImage";
 import Button from "./Button";
 import Checkbox from "./Checkbox";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 
 
 
@@ -30,7 +32,7 @@ const Formulario = () => {
       return;
     }
     try {
-    const response = await fetch("http://localhost:5000/register", {
+    const response = await fetch(`${API_BASE}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { FaCamera } from "react-icons/fa";
 import BackHomeButton from "../../../app/components/VoltarHome";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 export default function Profile() {
     const [role, setRole] = useState("comum"); // comum | jogadora | olheiro
     const [avatar, setAvatar] = useState("/images/default-avatar.png");
@@ -19,7 +21,7 @@ export default function Profile() {
 
         const fetchUser = async () => {
             try {
-                const res = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+                const res = await fetch(`${API_BASE}/user/${userId}`);
                 const data = await res.json();
                 if (data.success) {
                     setName(data.name || "Meu Perfil");
@@ -50,7 +52,7 @@ export default function Profile() {
         }
 
         try {
-            const res = await fetch(`http://127.0.0.1:5000/user/${userId}/role`, {
+            const res = await fetch(`${API_BASE}/user/${userId}/role`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ role: newRole })

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import HeaderComunidade from "../../../components/HeaderComunidade";
 import Footer from "../../../components/Footer";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 // Componente estilo card FIFA
 function PlayerCard({ player, pos }) {
   return (
@@ -42,7 +44,7 @@ export default function EstatisticasPage() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const res = await fetch("http://127.0.0.1:5000/top-stats");
+        const res = await fetch(`${API_BASE}/top-stats`);
         const data = await res.json();
 
         // Ajusta formato para PlayerCard

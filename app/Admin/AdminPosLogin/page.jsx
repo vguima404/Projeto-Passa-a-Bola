@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 export default function AdminPosLogin() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ export default function AdminPosLogin() {
 
   // Busca todos os usuários
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch(`${API_BASE}/users`)
       .then(res => res.json())
       .then(data => {
         setUsuarios(data);
@@ -33,7 +35,7 @@ export default function AdminPosLogin() {
   // Salvar alterações
   const handleSave = async (userId) => {
     try {
-      await fetch(`http://localhost:5000/user/${userId}`, {
+      await fetch(`${API_BASE}/user/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gols, defesas }),
@@ -41,7 +43,7 @@ export default function AdminPosLogin() {
       setEditId(null);
 
       // Atualiza lista
-      const res = await fetch("http://localhost:5000/users");
+      const res = await fetch(`${API_BASE}/users`);
       setUsuarios(await res.json());
     } catch (err) {
       console.error("Erro ao atualizar usuário:", err);
@@ -52,11 +54,11 @@ export default function AdminPosLogin() {
   const handleDelete = async (userId) => {
     if (!window.confirm("Tem certeza que deseja remover este usuário?")) return;
     try {
-      await fetch(`http://localhost:5000/user/${userId}`, {
+      await fetch(`${API_BASE}/user/${userId}`, {
         method: "DELETE",
       });
       // Atualiza lista
-      const res = await fetch("http://localhost:5000/users");
+      const res = await fetch(`${API_BASE}/users`);
       setUsuarios(await res.json());
     } catch (err) {
       console.error("Erro ao remover usuário:", err);

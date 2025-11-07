@@ -3,6 +3,8 @@ import { FaUser, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 const HeaderPosLogin = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
@@ -16,7 +18,7 @@ const HeaderPosLogin = () => {
   }
 
   try {
-    const res = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+    const res = await fetch(`${API_BASE}/user/${userId}`);
     const data = await res.json();
 
     if (data.success) {

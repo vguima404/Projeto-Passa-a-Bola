@@ -141,40 +141,37 @@ Abra `/PerfilJogadora/1` para ver o dashboard consumindo esses arquivos locais. 
 ### Endpoints do Backend Flask (MongoDB)
 
 - **Login usuário:**  
-  `POST http://localhost:5000/login`
+  `POST https://projeto-passa-a-bola.onrender.com/login`
 
 - **Login admin:**  
-  `POST http://localhost:5000/admin-login`
+  `POST https://projeto-passa-a-bola.onrender.com/admin-login`
 
 - **Cadastro de usuário:**  
-  `POST http://localhost:5000/register`
+  `POST https://projeto-passa-a-bola.onrender.com/register`
 
 - **Buscar todos os usuários:**  
-  `GET http://localhost:5000/users`
+  `GET https://projeto-passa-a-bola.onrender.com/users`
 
 - **Buscar usuário por ID:**  
-  `GET http://localhost:5000/user/<user_id>`
+  `GET https://projeto-passa-a-bola.onrender.com/user/<user_id>`
 
 - **Atualizar usuário:**  
-  `PUT http://localhost:5000/user/<user_id>`
+  `PUT https://projeto-passa-a-bola.onrender.com/user/<user_id>`
 
 - **Remover usuário:**  
-  `DELETE http://localhost:5000/user/<user_id>`
+  `DELETE https://projeto-passa-a-bola.onrender.com/user/<user_id>`
 
-- **Atualizar estatísticas (gols/defesas):**  
-  `PUT http://localhost:5000/user/<user_id>/estatisticas`
+- **Atualizar role (jogadora/olheiro):**  
+  `PUT https://projeto-passa-a-bola.onrender.com/user/<user_id>/role`
 
-- **Atualizar status do RG:**  
-  `PUT http://localhost:5000/user/<user_id>/rg`
+- **Listagem para administração (resumo de usuários):**  
+  `GET https://projeto-passa-a-bola.onrender.com/admin/users`
 
-- **Remover highlight (MVP):**  
-  `DELETE http://localhost:5000/highlight/<highlight_id>`
+- **Top estatísticas de gols e defesas (ranking):**  
+  `GET https://projeto-passa-a-bola.onrender.com/top-stats`
 
-- **Buscar estatísticas de gols e defesas (todos os usuários):**  
-  `GET http://localhost:5000/estatisticas`
-
-- **Buscar estatísticas de gols e defesas (usuário específico):**  
-  `GET http://localhost:5000/user/<user_id>/estatisticas`
+- **Health check:**  
+  `GET https://projeto-passa-a-bola.onrender.com/`
 
 ---
 
@@ -203,18 +200,17 @@ Abra `/PerfilJogadora/1` para ver o dashboard consumindo esses arquivos locais. 
 
 ```text
 # Backend Flask
-POST    http://localhost:5000/login
-POST    http://localhost:5000/admin-login
-POST    http://localhost:5000/register
-GET     http://localhost:5000/users
-GET     http://localhost:5000/user/<user_id>
-PUT     http://localhost:5000/user/<user_id>
-DELETE  http://localhost:5000/user/<user_id>
-PUT     http://localhost:5000/user/<user_id>/estatisticas
-PUT     http://localhost:5000/user/<user_id>/rg
-DELETE  http://localhost:5000/highlight/<highlight_id>
-GET     http://localhost:5000/estatisticas
-GET     http://localhost:5000/user/<user_id>/estatisticas
+POST    https://projeto-passa-a-bola.onrender.com/login
+POST    https://projeto-passa-a-bola.onrender.com/admin-login
+POST    https://projeto-passa-a-bola.onrender.com/register
+GET     https://projeto-passa-a-bola.onrender.com/users
+GET     https://projeto-passa-a-bola.onrender.com/admin/users
+GET     https://projeto-passa-a-bola.onrender.com/user/<user_id>
+PUT     https://projeto-passa-a-bola.onrender.com/user/<user_id>
+PUT     https://projeto-passa-a-bola.onrender.com/user/<user_id>/role
+DELETE  https://projeto-passa-a-bola.onrender.com/user/<user_id>
+GET     https://projeto-passa-a-bola.onrender.com/top-stats
+GET     https://projeto-passa-a-bola.onrender.com/
 
 # API Futebol
 GET     https://api.api-futebol.com.br/v1/campeonatos/71/partidas

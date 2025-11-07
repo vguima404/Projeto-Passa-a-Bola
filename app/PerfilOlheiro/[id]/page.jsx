@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaInstagram, FaFacebook } from "react-icons/fa";
 import BackHomeButton from "../../components/VoltarHome";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+
 export default function OlheiroProfile() {
   const [filter, setFilter] = useState("");
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -12,7 +14,7 @@ export default function OlheiroProfile() {
   // Buscar todas as jogadoras do backend
   // =========================
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/users") // rota GET /users que você vai criar no Flask
+    fetch(`${API_BASE}/users`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
