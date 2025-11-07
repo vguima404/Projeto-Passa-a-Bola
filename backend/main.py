@@ -8,12 +8,17 @@ import os
 app = Flask(__name__)
 
 
-CORS(app, resources={r"/*": {"origins": [
-    "http://localhost:3000",                 
-    "https://projeto-passa-a-bola.vercel.app"        
-]}}, supports_credentials=True)
-
-
+CORS(
+    app,
+    resources={r"/*": {"origins": [
+        "http://localhost:3000/",                          # dev
+        "https://projeto-passa-a-bola.vercel.app"        # front no Vercel 
+    ],
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"],
+    }},
+    supports_credentials=True  
+)
 app.register_blueprint(register_bp)
 
 # =====================================
