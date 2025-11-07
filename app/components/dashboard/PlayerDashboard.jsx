@@ -21,6 +21,13 @@ import {
   CartesianGrid,
 } from "recharts";
 
+// Base do backend (Render em produção; localhost em dev)
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  (process.env.NODE_ENV === "development"
+    ? "http://127.0.0.1:5000"
+    : "https://projeto-passa-a-bola.onrender.com");
+
 function Section({ title, children, right }) {
   return (
     <section className="bg-white rounded-2xl shadow p-5">
@@ -49,6 +56,7 @@ export default function PlayerDashboard({ playerId }) {
   const [recs, setRecs] = useState([]);
   const [feedback, setFeedback] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [usingMock, setUsingMock] = useState(false);
   const TABS = ["Visão geral", "Mídia", "Competições", "Recomendações", "Feedback"];
   const [tab, setTab] = useState(TABS[0]);
   const [period, setPeriod] = useState("Tudo"); // 7, 30, 90, Tudo
@@ -58,21 +66,33 @@ export default function PlayerDashboard({ playerId }) {
     let isMounted = true;
     async function loadAll() {
       try {
-        const [st, md, cp, rc, fb] = await Promise.all([
-          fetch(`/api/player/${playerId}/stats`).then((r) => r.json()),
-          fetch(`/api/player/${playerId}/media`).then((r) => r.json()),
-          fetch(`/api/player/${playerId}/competitions`).then((r) => r.json()),
-          fetch(`/api/player/${playerId}/recommendations`).then((r) => r.json()),
-          fetch(`/api/player/${playerId}/feedback`).then((r) => r.json()),
-        ]);
+        // Busca os dados REAIS do usuário no backend e mapeia para o dashboard
+        const res = await fetch(`${API_BASE}/user/${playerId}`);
+        const data = await res.json();
         if (!isMounted) return;
-        setStats(st);
-        setMedia(md);
-        setCompetitions(cp);
-        setRecs(rc);
-        setFeedback(fb);
+        if (data?.success) {
+          const mappedStats = {
+            position: data.position || "-",
+            matches: Array.isArray(data.matches) ? data.matches.length : (Number(data.matches) || 0),
+            goals: Number(data.gols || 0),
+            saves: Number(data.defesas || 0),
+            assists: 0,
+            wins: 0,
+            ratingAvg: 0,
+          };
+          setStats(mappedStats);
+        } else {
+          console.warn("Falha ao obter usuário para dashboard:", data);
+          setStats({ position: "-", matches: 0, goals: 0, saves: 0, assists: 0, wins: 0, ratingAvg: 0 });
+        }
+        // Mantém outras seções vazias por enquanto (sem API dedicada)
+        setMedia({ items: [], totals: { views: 0, likes: 0, comments: 0 } });
+        setCompetitions([]);
+        setRecs([]);
+        setFeedback([]);
       } catch (e) {
         console.error("Erro ao carregar dashboard:", e);
+        if (isMounted) setStats({ position: "-", matches: 0, goals: 0, saves: 0, assists: 0, wins: 0, ratingAvg: 0 });
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -82,6 +102,94 @@ export default function PlayerDashboard({ playerId }) {
       isMounted = false;
     };
   }, [playerId]);
+
+  // Dados simulados para visualizar o dashboard "cheio"
+  function applyMock() {
+    const now = Date.now();
+    const days = (d) => new Date(now - d * 24 * 60 * 60 * 1000).toISOString();
+
+    const mockStats = {
+      position: "Atacante",
+      matches: 18,
+      goals: 12,
+      saves: 4,
+      assists: 6,
+      wins: 11,
+      ratingAvg: 8.3,
+    };
+    const mockMediaItems = [
+      { title: "Golaço de fora da área", createdAt: days(30), views: 850, likes: 210, comments: 12 },
+      { title: "Hat-trick na semifinal", createdAt: days(20), views: 1320, likes: 410, comments: 30 },
+      { title: "Assistência mágica", createdAt: days(10), views: 640, likes: 150, comments: 9 },
+      { title: "Melhores momentos do mês", createdAt: days(2), views: 980, likes: 260, comments: 14 },
+    ];
+    const mockMediaTotals = mockMediaItems.reduce((acc, i) => {
+      acc.views += i.views; acc.likes += i.likes; acc.comments += i.comments; return acc;
+    }, { views: 0, likes: 0, comments: 0 });
+
+    const mockCompetitions = [
+      { name: "Copa Passa a Bola", status: "inscrita" },
+      { name: "Liga Metropolitana", status: "concluída" },
+      { name: "Torneio Primavera", status: "inscrita" },
+      { name: "Copa Regional", status: "concluída" },
+      { name: "Peneira Sub-20", status: "aberta" },
+    ];
+
+    const mockRecs = [
+      { team: "EC Aurora", distanceKm: 6 },
+      { team: "Fênix FC", distanceKm: 12 },
+      { team: "Atlético Jardim", distanceKm: 21 },
+      { team: "União Norte", distanceKm: 35 },
+    ];
+
+    const mockFeedback = [
+      { date: days(28), rating: 7.5 },
+      { date: days(21), rating: 8.0 },
+      { date: days(14), rating: 8.6 },
+      { date: days(7), rating: 8.2 },
+      { date: days(1), rating: 8.9 },
+    ];
+
+    setStats(mockStats);
+    setMedia({ items: mockMediaItems, totals: mockMediaTotals });
+    setCompetitions(mockCompetitions);
+    setRecs(mockRecs);
+    setFeedback(mockFeedback);
+    setUsingMock(true);
+  }
+
+  async function removeMockAndReload() {
+    setUsingMock(false);
+    // Recarrega dados reais
+    try {
+      if (!playerId) return;
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/user/${playerId}`);
+      const data = await res.json();
+      if (data?.success) {
+        const mappedStats = {
+          position: data.position || "-",
+          matches: Array.isArray(data.matches) ? data.matches.length : (Number(data.matches) || 0),
+          goals: Number(data.gols || 0),
+          saves: Number(data.defesas || 0),
+          assists: 0,
+          wins: 0,
+          ratingAvg: 0,
+        };
+        setStats(mappedStats);
+      } else {
+        setStats({ position: "-", matches: 0, goals: 0, saves: 0, assists: 0, wins: 0, ratingAvg: 0 });
+      }
+      setMedia({ items: [], totals: { views: 0, likes: 0, comments: 0 } });
+      setCompetitions([]);
+      setRecs([]);
+      setFeedback([]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const perfNote = useMemo(() => {
     if (!stats) return "-";
@@ -153,6 +261,34 @@ export default function PlayerDashboard({ playerId }) {
 
   return (
     <div className="space-y-6">
+      {/* Barra de ações rápidas */}
+      <div className="flex flex-wrap items-center gap-3">
+        {!usingMock ? (
+          <button
+            type="button"
+            onClick={applyMock}
+            className="px-3 py-1.5 rounded-lg text-sm bg-gray-900 text-white hover:bg-black"
+            title="Preencher o dashboard com dados de exemplo"
+          >
+            Ver com dados simulados
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={removeMockAndReload}
+            className="px-3 py-1.5 rounded-lg text-sm bg-white border border-gray-300 text-gray-800 hover:bg-gray-50"
+            title="Voltar a exibir somente dados reais"
+          >
+            Voltar aos dados reais
+          </button>
+        )}
+        {usingMock && (
+          <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+            Visualizando dados simulados
+          </span>
+        )}
+      </div>
+
       {/* Navegação por abas + Filtro de período */}
       <div className="flex flex-col gap-3">
         <div role="tablist" aria-label="Seções do dashboard" className="flex flex-wrap gap-2">
@@ -215,9 +351,10 @@ export default function PlayerDashboard({ playerId }) {
           <StatCard label="Nota média" value={perfNote} color="text-amber-600" />
           <StatCard label="Jogos" value={stats?.matches ?? 0} />
           <StatCard label="Gols" value={stats?.goals ?? 0} color="text-green-600" />
+          <StatCard label="Defesas" value={stats?.saves ?? 0} color="text-blue-600" />
         </div>
         <p className="mt-3 text-sm text-gray-600">
-          Resumo: você disputou <span className="font-semibold">{stats?.matches ?? 0}</span> jogos, marcou <span className="font-semibold">{stats?.goals ?? 0}</span> gols e tem nota média <span className="font-semibold">{perfNote}</span>. Continue assim!
+          Resumo: você disputou <span className="font-semibold">{stats?.matches ?? 0}</span> jogos, marcou <span className="font-semibold">{stats?.goals ?? 0}</span> gol(s), realizou <span className="font-semibold">{stats?.saves ?? 0}</span> defesa(s) e tem nota média <span className="font-semibold">{perfNote}</span>.
         </p>
       </Section>
       )}

@@ -81,7 +81,7 @@ const HeaderPosLogin = () => {
         {/* Aqui aplicamos a nova lógica de clique */}
         <button
           onClick={handleMeuPerfilClick}
-          className="text-white font-poppins text-xl font-semibold flex items-center gap-2 justify-center hover:underline"
+          className="text-white font-poppins text-xl font-semibold cursor-pointer flex items-center gap-2 justify-center hover:underline"
         >
           <FaUser className="inline-block text-lg" />
           Meu perfil

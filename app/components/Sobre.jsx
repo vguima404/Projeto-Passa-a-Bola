@@ -24,24 +24,12 @@ export default function Sobre() {
         </div>
 
         {/* Imagem + Texto */}
-  <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="flex justify-center items-center">
           <img
             src="/jogadas1.jpg"
             alt="Luana em disputa de bola com outra jogadora"
-            className="rounded-lg shadow-lg"
+            className="rounded-lg max-w-full w-[500px] shadow-lg object-cover"
           />
-          <div>
-            <h3 className="text-2xl font-semibold mb-4 text-white drop-shadow">Nossa História</h3>
-            <p className="text-gray-200 mb-4 text-xl">
-              Criado em 2015, o Passa a Bola nasceu da ideia de que o esporte pode ser uma
-              poderosa ferramenta de transformação. Hoje, alcançamos centenas de jovens em
-              diferentes comunidades, promovendo inclusão social e novas oportunidades.
-            </p>
-            <p className="text-gray-200 text-xl">
-              Mais do que treinar habilidades esportivas, buscamos desenvolver valores como
-              respeito, disciplina, trabalho em equipe e solidariedade.
-            </p>
-          </div>
         </div>
 
         {/* Missão, Visão e Valores */}
