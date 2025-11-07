@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { FaCamera } from "react-icons/fa";
 import BackHomeButton from "../../../app/components/VoltarHome";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "https://projeto-passa-a-bola.onrender.com";
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    (process.env.NODE_ENV === "development"
+        ? "http://127.0.0.1:5000"
+        : "https://projeto-passa-a-bola.onrender.com");
 
 export default function Profile() {
     const [role, setRole] = useState("comum"); // comum | jogadora | olheiro
@@ -36,12 +40,38 @@ export default function Profile() {
         fetchUser();
     }, [userId]);
 
-    const handleAvatarChange = (e) => {
+    const handleAvatarChange = async (e) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => setAvatar(ev.target.result);
-            reader.readAsDataURL(file);
+        if (!file) return;
+        try {
+            const form = new FormData();
+            form.append("image", file);
+            const uploadRes = await fetch(`${API_BASE}/upload-image`, { method: "POST", body: form });
+            const ct = uploadRes.headers.get("content-type") || "";
+            let data;
+            if (ct.includes("application/json")) {
+                data = await uploadRes.json();
+            } else {
+                const text = await uploadRes.text();
+                throw new Error(`Resposta não-JSON (${uploadRes.status}): ${text.substring(0,200)}`);
+            }
+            if (!data.success) {
+                console.error("Upload falhou:", data);
+                alert(`${data.message || "Falha no upload"}${data.detail ? "\n" + data.detail : ""}`);
+                return;
+            }
+            const link = data.link;
+            setAvatar(link);
+            if (userId) {
+                await fetch(`${API_BASE}/user/${userId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ photoUrl: link })
+                });
+            }
+        } catch (err) {
+            console.error("Erro ao enviar imagem:", err);
+            alert(`Erro ao enviar imagem: ${err.message || err}`);
         }
     };
 

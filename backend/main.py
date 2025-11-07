@@ -4,13 +4,23 @@ from db.connection import col
 from src.routes.register import register_bp
 from bson import ObjectId
 import os
+import requests
+import base64
+from dotenv import load_dotenv
+
+load_dotenv()  # carrega variáveis de ambiente de um arquivo .env local (desenvolvimento)
 
 app = Flask(__name__)
 
 # Origens permitidas (sem barra no final)
 ALLOWED_ORIGINS = {
-    "http://localhost:3000",                     # dev local
-    "https://projeto-passa-a-bola.vercel.app",   # front em produção
+    # dev local (Next pode subir em 3000 ou 3001)
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    # produção
+    "https://projeto-passa-a-bola.vercel.app",
 }
 
 
@@ -280,6 +290,58 @@ def delete_user(user_id):
 @app.route("/")
 def home():
     return jsonify({"status": "Backend online"}), 200
+
+# =====================================
+# UPLOAD IMAGEM (imgbb)
+# =====================================
+IMGBB_API_KEY = os.environ.get("IMGBB_API_KEY")  # definir no Render e local (.env)
+
+@app.route("/upload-image", methods=["GET", "POST", "OPTIONS"])
+def upload_image():
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    if request.method == "GET":
+        # Endpoint de verificação rápida em produção
+        return jsonify({
+            "success": True,
+            "message": "Endpoint /upload-image disponível. Envie POST multipart/form-data com campo 'image'."
+        }), 200
+
+    if not IMGBB_API_KEY:
+        return jsonify({"success": False, "message": "IMGBB_API_KEY não configurada"}), 500
+
+    if 'image' not in request.files:
+        return jsonify({"success": False, "message": "Arquivo 'image' não enviado"}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({"success": False, "message": "Nome de arquivo vazio"}), 400
+
+    try:
+        # Validação simples de tamanho (<= 5MB)
+        file.seek(0, 2)  # move para fim
+        size = file.tell()
+        file.seek(0)
+        if size > 5 * 1024 * 1024:
+            return jsonify({"success": False, "message": "Imagem excede 5MB"}), 400
+
+        raw = file.read()
+        b64 = base64.b64encode(raw).decode('utf-8')
+        url = f"https://api.imgbb.com/1/upload"
+        payload = {"key": IMGBB_API_KEY, "image": b64}
+        resp = requests.post(url, data=payload, timeout=25)
+        if resp.status_code != 200:
+            return jsonify({"success": False, "message": f"Erro imgbb {resp.status_code}", "detail": resp.text[:500]}), 502
+        j = resp.json()
+        if not j.get('success'):
+            return jsonify({"success": False, "message": "Falha no imgbb", "detail": str(j)[:500]}), 502
+        link = j.get('data', {}).get('url')
+        if not link:
+            return jsonify({"success": False, "message": "Resposta imgbb sem URL", "detail": str(j)[:500]}), 502
+        return jsonify({"success": True, "link": link}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": "Exceção no upload", "detail": str(e)[:500]}), 500
 
 # =====================================
 # RUN (Render e local)

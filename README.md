@@ -175,6 +175,69 @@ Abra `/PerfilJogadora/1` para ver o dashboard consumindo esses arquivos locais. 
 
 ---
 
+### Upload de Imagens (Imgbb)
+
+Integração para upload de avatar/foto de perfil usando o serviço [imgbb](https://api.imgbb.com/).
+
+**Endpoint principal:**
+
+- `POST https://projeto-passa-a-bola.onrender.com/upload-image`
+  - Content-Type: `multipart/form-data`
+  - Campo do formulário: `image` (arquivo)
+  - Limite de tamanho: 5 MB
+  - Requer variável de ambiente `IMGBB_API_KEY` configurada no backend.
+  - Respostas:
+    - Sucesso: `{ "success": true, "link": "https://i.ibb.co/..." }`
+    - Erro (exemplos): `{ "error": "API key ausente" }`, `{ "error": "Arquivo muito grande (max 5MB)" }`, `{ "error": "Falha no upload", "detail": "..." }`
+
+**Health do upload (útil para validar deploy):**
+
+- `GET https://projeto-passa-a-bola.onrender.com/upload-image`
+  - Retorna JSON simples confirmando que a rota está ativa.
+
+**Variáveis de ambiente:**
+
+Backend (`backend/.env`):
+
+```
+IMGBB_API_KEY=1daea02eec28d6f39b0c064b89049017
+```
+
+Frontend (`.env.local` opcional):
+
+```
+NEXT_PUBLIC_API_BASE_URL=https://projeto-passa-a-bola.onrender.com
+```
+
+Se não definido em desenvolvimento, o código usa fallback automático para `http://127.0.0.1:5000`.
+
+**Exemplo de requisição (curl):**
+
+```bash
+curl -X POST \
+  -F "image=@/caminho/para/foto.jpg" \
+  https://projeto-passa-a-bola.onrender.com/upload-image
+```
+
+**Fluxo no frontend:**
+
+1. Usuário seleciona arquivo.
+2. Componente envia `FormData` para `/upload-image`.
+3. Backend valida tamanho, lê e converte base64, envia ao imgbb.
+4. URL retornada é salva no perfil via `PUT /user/<user_id>` no campo `photoUrl`.
+
+**Principais validações no backend:**
+
+- Presença da chave `IMGBB_API_KEY`.
+- Presença do arquivo `image`.
+- Tamanho máximo (5MB).
+- Tratamento de erros da API externa (status não 200 / payload inválido).
+
+**CORS:**
+O backend adiciona cabeçalhos `Access-Control-Allow-Origin` para o domínio do frontend (Vercel) e origens locais (`http://localhost:3000`, etc.), permitindo o upload direto sem bloqueio de navegador.
+
+---
+
 ### Endpoints da API Futebol (Brasileirão Feminino)
 
 - **Buscar partidas do Brasileirão Feminino Série A1:**  
@@ -203,6 +266,7 @@ Abra `/PerfilJogadora/1` para ver o dashboard consumindo esses arquivos locais. 
 POST    https://projeto-passa-a-bola.onrender.com/login
 POST    https://projeto-passa-a-bola.onrender.com/admin-login
 POST    https://projeto-passa-a-bola.onrender.com/register
+POST    https://projeto-passa-a-bola.onrender.com/upload-image
 GET     https://projeto-passa-a-bola.onrender.com/users
 GET     https://projeto-passa-a-bola.onrender.com/admin/users
 GET     https://projeto-passa-a-bola.onrender.com/user/<user_id>
@@ -211,6 +275,7 @@ PUT     https://projeto-passa-a-bola.onrender.com/user/<user_id>/role
 DELETE  https://projeto-passa-a-bola.onrender.com/user/<user_id>
 GET     https://projeto-passa-a-bola.onrender.com/top-stats
 GET     https://projeto-passa-a-bola.onrender.com/
+GET     https://projeto-passa-a-bola.onrender.com/upload-image
 
 # API Futebol
 GET     https://api.api-futebol.com.br/v1/campeonatos/71/partidas

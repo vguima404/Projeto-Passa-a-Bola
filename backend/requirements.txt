@@ -6,3 +6,4 @@ pydantic
 pymongo
 flask
 flask_cors
+requests

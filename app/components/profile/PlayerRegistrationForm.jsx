@@ -28,9 +28,38 @@ function PlayerRegistrationForm({ initial = {}, onSave, onCancel }) {
 
   useEffect(() => {
     if (!photoFile) return;
-    const url = URL.createObjectURL(photoFile);
-    setPhotoPreview(url);
-    return () => URL.revokeObjectURL(url);
+    const doUpload = async () => {
+      try {
+        const API_BASE =
+          process.env.NEXT_PUBLIC_API_BASE_URL ||
+          (process.env.NODE_ENV === "development"
+            ? "http://127.0.0.1:5000"
+            : "https://projeto-passa-a-bola.onrender.com");
+        const form = new FormData();
+        form.append("image", photoFile);
+        const res = await fetch(`${API_BASE}/upload-image`, { method: "POST", body: form });
+        const ct = res.headers.get("content-type") || "";
+        let data;
+        if (ct.includes("application/json")) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          throw new Error(`Resposta não-JSON (${res.status}): ${text.substring(0,200)}`);
+        }
+        if (data.success && data.link) {
+          setPhotoPreview(data.link);
+        } else {
+          console.error("Upload falhou:", data);
+          alert(`${data.message || "Falha no upload da imagem"}${data.detail ? "\n" + data.detail : ""}`);
+          setPhotoPreview(null);
+        }
+      } catch (err) {
+        console.error("Erro upload imagem", err);
+        alert(`Erro ao enviar imagem: ${err.message || err}`);
+        setPhotoPreview(null);
+      }
+    };
+    doUpload();
   }, [photoFile]);
 
   const defaultBadges = ["MVP", "Artilheira", "Muralha", "Fair Play"];
@@ -126,7 +155,7 @@ function PlayerRegistrationForm({ initial = {}, onSave, onCancel }) {
                 onClick={() => document.querySelector('input[type="file"]').click()}
                 className="px-3 py-1 bg-gray-200 rounded"
               >
-                Selecionar imagem
+                {photoPreview ? "Trocar imagem" : "Selecionar imagem"}
               </button>
             </div>
           </label>
