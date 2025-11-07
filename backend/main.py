@@ -7,18 +7,40 @@ import os
 
 app = Flask(__name__)
 
+# Origens permitidas (sem barra no final)
+ALLOWED_ORIGINS = {
+    "http://localhost:3000",                     # dev local
+    "https://projeto-passa-a-bola.vercel.app",   # front em produção
+}
+
 
 CORS(
     app,
-    resources={r"/*": {"origins": [
-        "http://localhost:3000/",                          # dev
-        "https://projeto-passa-a-bola.vercel.app"        # front no Vercel 
-    ],
-    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "allow_headers": ["Content-Type", "Authorization"],
-    }},
-    supports_credentials=True  
+    origins=list(ALLOWED_ORIGINS),
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=True,
 )
+
+# Garante que TODAS as respostas (incluindo preflight) recebam os headers de CORS
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get("Origin")
+    if origin in ALLOWED_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        # Vary para impedir cache incorreto entre diferentes origens
+        vary = response.headers.get("Vary")
+        response.headers["Vary"] = f"{vary}, Origin" if vary else "Origin"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    return response
+
+# Responde genericamente a preflight OPTIONS para qualquer rota
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        return ("", 204)
 app.register_blueprint(register_bp)
 
 # =====================================
