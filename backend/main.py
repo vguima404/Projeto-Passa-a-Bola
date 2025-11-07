@@ -3,18 +3,22 @@ from flask_cors import CORS
 from db.connection import col  
 from src.routes.register import register_bp
 from bson import ObjectId
+import os
 
 app = Flask(__name__)
 
-# CORS liberado para o frontend
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
-# Blueprint de cadastro
+CORS(app, resources={r"/*": {"origins": [
+    "http://localhost:3000",                 
+    "https://projeto-passa-a-bola.vercel.app/"        
+]}}, supports_credentials=True)
+
+
 app.register_blueprint(register_bp)
 
-# =========================
+# =====================================
 # LOGIN NORMAL
-# =========================
+# =====================================
 @app.route("/login", methods=["POST", "OPTIONS"])
 def login():
     if request.method == "OPTIONS":
@@ -40,9 +44,9 @@ def login():
     else:
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
 
-# =========================
+# =====================================
 # LOGIN ADMIN
-# =========================
+# =====================================
 @app.route("/admin-login", methods=["POST", "OPTIONS"])
 def admin_login():
     if request.method == "OPTIONS":
@@ -76,9 +80,9 @@ def admin_login():
     else:
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
 
-# =========================
+# =====================================
 # GET USUÁRIO
-# =========================
+# =====================================
 @app.route("/user/<user_id>", methods=["GET"])
 def get_user(user_id):
     try:
@@ -105,9 +109,9 @@ def get_user(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
+# =====================================
 # ATUALIZAR USUÁRIO
-# =========================
+# =====================================
 @app.route("/user/<user_id>", methods=["PUT"])
 def update_user(user_id):
     try:
@@ -148,14 +152,14 @@ def update_user(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
-# ATUALIZAR ROLE (Jogadora ou Olheiro)
-# =========================
+# =====================================
+# ATUALIZAR ROLE
+# =====================================
 @app.route("/user/<user_id>/role", methods=["PUT"])
 def update_role(user_id):
     try:
         data = request.json
-        role = data.get("role")  # "jogadora" ou "olheiro"
+        role = data.get("role")
 
         if role not in ["jogadora", "olheiro"]:
             return jsonify({"success": False, "message": "Role inválida"}), 400
@@ -171,9 +175,9 @@ def update_role(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
+# =====================================
 # GET TODOS USUÁRIOS
-# =========================
+# =====================================
 @app.route("/users", methods=["GET"])
 def get_all_players():
     try:
@@ -184,9 +188,9 @@ def get_all_players():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
+# =====================================
 # GET USERS PARA ADMIN
-# =========================
+# =====================================
 @app.route("/admin/users", methods=["GET"])
 def get_all_players_admin():
     try:
@@ -204,9 +208,9 @@ def get_all_players_admin():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
+# =====================================
 # TOP ESTATÍSTICAS
-# =========================
+# =====================================
 @app.route("/top-stats", methods=["GET"])
 def get_top_stats():
     try:
@@ -226,9 +230,9 @@ def get_top_stats():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
+# =====================================
 # REMOVER USUÁRIO
-# =========================
+# =====================================
 @app.route("/user/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
@@ -243,8 +247,16 @@ def delete_user(user_id):
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 400
 
-# =========================
-# RUN
-# =========================
+# =====================================
+# HEALTH CHECK / TEST
+# =====================================
+@app.route("/")
+def home():
+    return jsonify({"status": "Backend online"}), 200
+
+# =====================================
+# RUN (Render e local)
+# =====================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
