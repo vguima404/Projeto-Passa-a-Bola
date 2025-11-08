@@ -13,6 +13,7 @@ const Login = () => {
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const aoLogar = async (evento) => {
@@ -26,6 +27,7 @@ const Login = () => {
   }
 
   try {
+    setLoading(true);
     const response = await fetch(`${API_BASE}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -45,6 +47,8 @@ const Login = () => {
     }
   } catch (err) {
     setErro("Erro ao conectar com o servidor.");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -63,6 +67,7 @@ const Login = () => {
             valor={email}
             aoAlterado={setEmail}
             type="email"
+            disabled={loading || sucesso}
           />
           <CampoTexto
             placeholder="Senha"
@@ -70,6 +75,7 @@ const Login = () => {
             valor={senha}
             aoAlterado={setSenha}
             type="password"
+            disabled={loading || sucesso}
           />
           {erro && (
             <span className="text-red-600 text-xs font-medium">{erro}</span>
@@ -77,7 +83,16 @@ const Login = () => {
           {sucesso && (
             <span className="text-green-600 text-xs font-medium">Login realizado com sucesso!</span>
           )}
-          <Button type="submit" disabled={sucesso}>ENTRAR</Button>
+          <Button type="submit" disabled={loading || sucesso}>
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="inline-block w-5 h-5 border-2 border-purple-200 border-t-transparent rounded-full animate-spin" aria-hidden="true"></span>
+                <span>Entrando…</span>
+              </span>
+            ) : (
+              "ENTRAR"
+            )}
+          </Button>
           <Link href="/Cadastro/1" className="text-purple-700 text-xs font-semibold mt-2 hover:text-purple-800 hover:underline transition-all text-center block">Cadastre-se agora!</Link>
         </div>
       </form>
